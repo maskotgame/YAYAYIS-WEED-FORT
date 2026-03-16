@@ -16,7 +16,7 @@
 		"BUY MY MERCH"
 	];
 
-	$randomvandalsplash = $randomvandalsplashes[array_rand($randomvandalsplashes)];
+	$randomcatalogsplash = $randomcatalogsplashes[array_rand($randomcatalogsplashes)];
 ?>
 <!DOCTYPE html>
 <html>
