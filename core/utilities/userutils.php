@@ -231,15 +231,15 @@
 				"Looking at their friends"			=> "/my/friends.php",
 				"Looking at <b>THE</b> contributors"=> "/info/credits.php",
 				"Home (on mobile)"					=> "/mobile/home.php",
-				""									=> "/register.php",
-				" "									=> "/login.php",
 			];
 
 			$dont_catalog_ever = [
 				"/api/",
 				"/core/",
 				"/Admin/",
-				"/core/gamescripts/"
+				"/core/gamescripts/",
+				"/login.php",
+				"/register.php"
 			];
 
 			if($user != null) {
