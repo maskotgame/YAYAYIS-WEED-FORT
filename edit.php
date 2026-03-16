@@ -143,15 +143,19 @@
 
 					if(str_starts_with($type,"image/")) {
 						$image = imagecreatefromstring($contents);
-						imagesavealpha($image, true);
+						if($image instanceof GdImage) {
+							imagesavealpha($image, true);
 
-						if(imagesx($image) > 128 && imagesy($image) > 96) {
-							if(file_exists($_SERVER['DOCUMENT_ROOT']."/../assets/thumbs/$id")) {
-								unlink($_SERVER['DOCUMENT_ROOT']."/../assets/thumbs/$id");
+							if(imagesx($image) > 128 && imagesy($image) > 96) {
+								if(file_exists($_SERVER['DOCUMENT_ROOT']."/../assets/thumbs/$id")) {
+									unlink($_SERVER['DOCUMENT_ROOT']."/../assets/thumbs/$id");
+								}
+
+								imagepng($image, $_SERVER['DOCUMENT_ROOT']."/../assets/thumbs/$id");
 							}
-
-							imagepng($image, $_SERVER['DOCUMENT_ROOT']."/../assets/thumbs/$id");
 						}
+
+						
 					}
 				}
 			}
