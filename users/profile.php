@@ -171,7 +171,7 @@
 										<span><b>Joined</b>: <?= $get_user->join_date->format('F dS, Y') ?></span>
 									</div>
 									<?php if ($bgm): ?>
-									<div id="BGMNoticeArea" style="padding-top:0px; margin-top:-5px;">
+									<div id="OnlineStatusArea" style="padding-top:0px; margin-top:-5px;">
 										<span><b>This user has a custom profile music, If it dosen't play then click anywhere to play it!</b></span>
 									</div>
 									<?php endif; ?>
