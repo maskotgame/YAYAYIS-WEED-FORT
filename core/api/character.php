@@ -219,7 +219,7 @@
 				} else {
 					die(json_encode(["assets" => [], "page" => 1, "total_pages" => 1, "comment"=> "Hi, outfits haven't been added yet (congrats on finding this lol)"]));
 				}
-				else if($request == "search") {
+			} else if($request == "search") {
 					//coded by skylerclock
 				    $query = isset($_GET['q']) ? trim($_GET['q']) : "";
 				    $category = $_GET['c'] ?? null;
