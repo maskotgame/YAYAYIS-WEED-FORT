@@ -514,6 +514,100 @@ ANORRL.Character  = {
 			
 		});
 	}
+
+	Search: function(page) {
+
+    	if(this.CurrentlyLoadingCrapBruh) return;
+    	this.CurrentlyLoadingCrapBruh = true;
+
+    	if(page === undefined) page = 1;
+
+    	var query = $("#SearchBox").val().trim();
+
+    	var wardrobecontainer = $("#Wardrobe #AssetsContainer > table");
+    	var loadingMessage = $("#Wardrobe #AssetsContainer #StatusText #Loading");
+    	var emptyMessage = $("#Wardrobe #AssetsContainer #StatusText #NoAssets");
+
+    	wardrobecontainer.children().each(function() {
+        	$(this).remove();
+    	});
+
+    	emptyMessage.hide();
+    	loadingMessage.show();
+
+    	$.get("/api/character", {
+        	r: "search",
+        	q: query,
+        	c: this.CurrentCategory,
+        	p: page
+    	}, function(data) {
+
+        	var assets = data['assets'] || [];
+
+        	loadingMessage.hide();
+
+        	if(assets.length === 0) {
+            	emptyMessage.show();
+            	ANORRL.Character.CurrentlyLoadingCrapBruh = false;
+            	return;
+        	}
+
+        	wardrobecontainer.removeAttr("hidden");
+
+        	var index = 0;
+        	var rowIndex = 0;
+
+        	for (var key in assets) {
+
+            	if(index % 4 === 0) {
+                	wardrobecontainer.append($("<tr></tr>"));
+                	if(index !== 0) rowIndex++;
+            	}
+
+            	var asset = assets[key];
+
+            	var td = $("<td></td>");
+            	var template = $($(".Asset[template]").clone().prop('outerHTML'));
+            	td.append(template);
+            	template.removeAttr("template");
+
+            	var urlname = asset['name']
+                	.replaceAll(regex, "")
+                	.trim()
+                	.toLowerCase()
+                	.replaceAll(" ", "-");
+
+            	if(urlname === "") urlname = "unnamed";
+
+            	template.find("#NameAndThumbs > img")
+                	.attr("src", "/thumbs/?id="+asset['id']+"&sxy=130");
+
+            	template.find("#NameAndThumbs > span")
+                	.html(asset['name']);
+
+            	template.find("#NameAndThumbs")
+                	.attr("href", "/"+urlname+"-item?id="+asset['id']);
+
+            	template.find("#Creator > span")
+                	.html(asset['creator']['name']);
+
+            	template.find("#Creator")
+                	.attr("href", "/users/"+asset['creator']['id']+"/profile");
+
+            	template.attr("data_assetid", asset['id']);
+
+            	template.find("#WearButton").on("click", function() {
+                	ANORRL.Character.WearAsset($(this).parent().attr("data_assetid"));
+            	});
+
+            	$(wardrobecontainer.find("tr")[rowIndex]).append(td);
+
+            	index++;
+        	}
+
+        	ANORRL.Character.CurrentlyLoadingCrapBruh = false;
+   		});
+	}
 };
 
 function setBackgroundColour(bodycontainer, bodytype, data, bodycolor) {
