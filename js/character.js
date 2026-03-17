@@ -513,7 +513,7 @@ ANORRL.Character  = {
 
 			
 		});
-	}
+	},
 
 	Search: function(page) {
 
