@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Mar 15, 2026 at 02:17 AM
+-- Generation Time: Mar 18, 2026 at 12:34 AM
 -- Server version: 10.11.14-MariaDB-0+deb12u2
 -- PHP Version: 8.4.17
 
@@ -205,22 +205,6 @@ CREATE TABLE `comments` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `datastores`
---
-
-DROP TABLE IF EXISTS `datastores`;
-CREATE TABLE `datastores` (
-  `dkey` text NOT NULL,
-  `universeId` int(11) NOT NULL,
-  `type` text NOT NULL,
-  `scope` text NOT NULL,
-  `target` text NOT NULL,
-  `value` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `favourites`
 --
 
@@ -291,19 +275,6 @@ CREATE TABLE `outfits` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `persistenceblobs`
---
-
-DROP TABLE IF EXISTS `persistenceblobs`;
-CREATE TABLE `persistenceblobs` (
-  `blob_placeid` int(11) NOT NULL,
-  `blob_playerid` int(11) NOT NULL,
-  `blob_data` text NOT NULL DEFAULT ''
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `profilebadges`
 --
 
@@ -345,18 +316,6 @@ CREATE TABLE `statuses` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `subscriptions`
---
-
-DROP TABLE IF EXISTS `subscriptions`;
-CREATE TABLE `subscriptions` (
-  `userid` int(11) NOT NULL,
-  `lastpaytime` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `transactions`
 --
 
@@ -387,10 +346,12 @@ CREATE TABLE `users` (
   `user_security` varchar(255) NOT NULL,
   `user_lastprofileupdate` timestamp NOT NULL DEFAULT current_timestamp(),
   `user_setprofilepicture` int(1) NOT NULL DEFAULT 0,
-  `user_currentappearancemd5` varchar(255) NOT NULL DEFAULT 'e729ef49ab16651b0826febda215862b', -- noob avatar
+  `user_currentappearancemd5` varchar(255) NOT NULL DEFAULT 'e729ef49ab16651b0826febda215862b',
   `user_css` text NOT NULL DEFAULT '',
   `user_online` int(1) NOT NULL DEFAULT 0,
-  `user_joindate` timestamp NOT NULL DEFAULT current_timestamp()
+  `user_joindate` timestamp NOT NULL DEFAULT current_timestamp(),
+  `user_profilebgm` varchar(255) DEFAULT NULL,
+  `user_lastbgmupdate` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -488,12 +449,6 @@ ALTER TABLE `comments`
   ADD PRIMARY KEY (`comment_id`);
 
 --
--- Indexes for table `datastores`
---
-ALTER TABLE `datastores`
-  ADD PRIMARY KEY (`dkey`(100));
-
---
 -- Indexes for table `profilebadges_info`
 --
 ALTER TABLE `profilebadges_info`
@@ -504,12 +459,6 @@ ALTER TABLE `profilebadges_info`
 --
 ALTER TABLE `statuses`
   ADD PRIMARY KEY (`status_id`);
-
---
--- Indexes for table `subscriptions`
---
-ALTER TABLE `subscriptions`
-  ADD PRIMARY KEY (`userid`);
 
 --
 -- Indexes for table `transactions`
