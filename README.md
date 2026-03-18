@@ -15,6 +15,6 @@ Why? It makes your life easier by allowing a local copy of anorrl on your machin
 
 It reduces the chance of errors occuring when creating pull request.
 
-# I HEAVY ADVISE USING GITHUB'S ON SITE EDITOR.
+# I HEAVY ADVISE AGAINST USING GITHUB'S ON SITE EDITOR.
 
 thank you :]
