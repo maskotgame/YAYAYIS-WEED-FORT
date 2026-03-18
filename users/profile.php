@@ -105,7 +105,7 @@
 		
 		var once = false;
 		$("body").on("click", function() {
-			if(once || !$("#bgm")[0].muted || !shouldplay) {
+			if(once || !shouldplay) {
 				return;
 			}
 			once = true;
