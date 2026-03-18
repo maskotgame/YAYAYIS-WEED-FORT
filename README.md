@@ -13,8 +13,8 @@ Ok hey, if you want to contribute to the site. PLEASE invest in a local webserve
 
 Why? It makes your life easier by allowing a local copy of anorrl on your machine to run while you work on the changes you wish to put on the site.
 
-It reduces the chance of errors occuring when creating pull request.
+It reduces the chance of errors occuring when creating a pull request.
 
-# I HEAVY ADVISE USING GITHUB'S ON SITE EDITOR.
+# I HEAVY ADVISE AGAINST USING GITHUB'S ON SITE EDITOR.
 
 thank you :]
