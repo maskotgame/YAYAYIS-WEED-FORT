@@ -15,6 +15,9 @@ Why? It makes your life easier by allowing a local copy of anorrl on your machin
 
 It reduces the chance of errors occuring when creating a pull request.
 
+### arch/cachyos tutorial
+[https://www.youtube.com/watch?v=Mb_xV2qz_J8](https://www.youtube.com/watch?v=Mb_xV2qz_J8)
+
 # I HEAVY ADVISE AGAINST USING GITHUB'S ON SITE EDITOR.
 
 thank you :]
