@@ -34,12 +34,8 @@
 		}
 
 		public static function IsValidCSS(string $data) {
-			if(true) {
-				return true;
-			}
-
 			$blockedcssids = [
-				//"@font",
+				/*"@font",
 				"ProfileSign",
 				"#background",
 				"UsernameRow",
@@ -56,11 +52,11 @@
 				/*"line-height",
 				"display:",
 				"opacity",
-				"url(",*/
+				"url(",
 				"base64",
 				"BodyContainer",
 				"#Container",
-				"WrapperBody",
+				"WrapperBody",*/
 				"\\",
 				"::",
 				/*"filter",
