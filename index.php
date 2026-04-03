@@ -18,8 +18,8 @@
 		define('SESSION', false);
 	}
 
-	define('CONFIG', json_decode(__DIR__."/../settings.json"));
-
+	define('CONFIG', json_decode(file_get_contents(__DIR__."/../settings.json")));
+	
 	require_once __DIR__ . "/router.php";
 
 	exit();

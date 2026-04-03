@@ -2,7 +2,6 @@
 	namespace anorrl\utilities;
 
 	ini_set("default_socket_timeout", 60);
-	$settings = parse_ini_file($_SERVER['DOCUMENT_ROOT']."/../settings.env", true);
 
 	class Renderer {
 
@@ -48,18 +47,16 @@
 		}
 
 		private static function UpdateAndSetConfig() {
-			$settings = parse_ini_file($_SERVER['DOCUMENT_ROOT']."/../settings.env", true);
-			$renderer_settings = $settings['renderer'];
-			if(self::$cantuserenderer != boolval($renderer_settings['DISABLED'])) {
-				self::$cantuserenderer = boolval($renderer_settings['DISABLED']);
+			if(self::$cantuserenderer != CONFIG->arbiter->disabled) {
+				self::$cantuserenderer = CONFIG->arbiter->disabled;
 			}
 
-			if(self::$arbiter_ip != $settings['arbiter']['LOC']) {
-				self::$arbiter_ip = $settings['arbiter']['LOC'];
+			if(self::$arbiter_ip != CONFIG->arbiter->location->private) {
+				self::$arbiter_ip = CONFIG->arbiter->location->private;
 			}
 
-			if(self::$arbiter_token != $settings['arbiter']['token']) {
-				self::$arbiter_token = $settings['arbiter']['token'];
+			if(self::$arbiter_token != CONFIG->arbiter->token) {
+				self::$arbiter_token = CONFIG->arbiter->token;
 			}
 		}
 

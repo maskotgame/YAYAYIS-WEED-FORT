@@ -6,7 +6,7 @@
 	}
 
 	$user = SESSION->user;
-
+	$domain = CONFIG->domain;
 
 	function getRandomString(int $length = 25): string {
 		$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -97,7 +97,7 @@
 			if($place != null && ($user->id == $place->creator->id || !$place->copylocked || ($place->teamcreate_enabled && $place->IsCloudEditor($user)) || $user->IsAdmin())) {
 				$placeID = $place->id;
 				$clientticket = base64_encode(string: $user->security_key);
-				die("anorrl-studio:1+script:http%3A%2F%2Farl.lambda.cam%2Fgame%2Fedit.ashx?placeId=$placeID+placeid:$placeID+launchmode:edit+gameinfo:$clientticket");	
+				die("anorrl-studio:1+script:http%3A%2F%2F{$domain}%2Fgame%2Fedit.ashx?placeId=$placeID+placeid:$placeID+launchmode:edit+gameinfo:$clientticket");	
 			} else {
 				if($place == null) {
 					die("Invalid place!");
@@ -135,7 +135,7 @@
 					$stmt_createnewsession = $con->prepare("INSERT INTO `active_players`(`session_id`, `session_serverid`, `session_playerid`, `session_status`) VALUES (?,?,?,0)");
 					$stmt_createnewsession->bind_param("ssi", $sessionID, $serverID, $playerID);
 					$stmt_createnewsession->execute();
-					die("anorrl-player:1+placelauncherurl:http%3A%2F%2Farl.lambda.cam%2Fgame%2FPlaceLauncher.ashx?sessionID=$sessionID+placeid:$placeID+launchmode:play+gameinfo:0");
+					die("anorrl-player:1+placelauncherurl:http%3A%2F%2F{$domain}%2Fgame%2FPlaceLauncher.ashx?sessionID=$sessionID+placeid:$placeID+launchmode:play+gameinfo:0");
 				}
 
 			} else if(isset($_POST['serverID'])) {
@@ -171,7 +171,7 @@
 						$stmt_createnewsession = $con->prepare("INSERT INTO `active_players`(`session_id`, `session_serverid`, `session_playerid`, `session_status`) VALUES (?,?,?,0)");
 						$stmt_createnewsession->bind_param("ssi", $sessionID, $serverID, $playerID);
 						$stmt_createnewsession->execute();
-						die("anorrl-player:1+placelauncherurl:http%3A%2F%2Farl.lambda.cam%2Fgame%2FPlaceLauncher.ashx?sessionID=$sessionID+placeid:$placeID+launchmode:play+gameinfo:0");
+						die("anorrl-player:1+placelauncherurl:http%3A%2F%2F{$domain}%2Fgame%2FPlaceLauncher.ashx?sessionID=$sessionID+placeid:$placeID+launchmode:play+gameinfo:0");
 
 					}
 				}

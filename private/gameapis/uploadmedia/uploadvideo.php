@@ -4,8 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<title>ANORRL</title>
-		<link rel="stylesheet" type="text/css" href="/css/new/main.css"></link>
-		<link rel="stylesheet" type="text/css" href="/css/new/uploadmedia.css"></link>
+		<link rel="stylesheet" type="text/css" href="/public/css/new/main.css"></link>
+		<link rel="stylesheet" type="text/css" href="/public/css/new/uploadmedia.css"></link>
 	</head>
 	<body class="InGamePopup">
 		<div id="Wrapper">

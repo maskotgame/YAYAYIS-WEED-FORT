@@ -1,5 +1,7 @@
 <?php 
 
+// rewrite to make it a template file instead
+
 use anorrl\User;
 
 header("Content-Type: text/plain"); 
@@ -10,7 +12,7 @@ header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 
 if(isset($_GET['clothing'])): ?>
-<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://arl.lambda.cam/roblox.xsd" version="4">
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://<?= $domain ?>/roblox.xsd" version="4">
 	<External>null</External>
 	<External>nil</External>
 	<Item class="BodyColors" referent="RBX96B37B6C58984541BA7545B230B6E10D">
@@ -40,7 +42,7 @@ if(isset($_GET['clothing'])): ?>
 	}
 	
 ?>
-<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://arl.lambda.cam/roblox.xsd" version="4">
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://<?= $domain ?>/roblox.xsd" version="4">
 	<External>null</External>
 	<External>nil</External>
 	<Item class="BodyColors" referent="RBXCCC36C132C584B37B29DB69EAE48292A">

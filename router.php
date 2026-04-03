@@ -13,11 +13,20 @@
 			}
 			if(str_ends_with($file, ".json")) {
 				header("Content-Type: application/json");
+
 			}
 			if(str_ends_with($file, ".txt")) {
 				header("Content-Type: text/plain");
 			}
-			require __DIR__.$file;
+			
+			if(str_ends_with($file, ".json") || str_ends_with($file, ".js")) {
+				$file = file_get_contents(__DIR__.$file);
+				$file = str_replace("{domain}", CONFIG->domain, $file);
+
+				echo $file;
+			} else {
+				require __DIR__.$file;
+			}
 		});
 	}
 
@@ -101,8 +110,8 @@
 	route_api('GET|POST', 'gameservers/validateplayer');
 
 	// game apis
-	route('GET',      '/asset/', '/private/api/assetdeliverer.php');
-	route('GET',      '/Asset/', '/private/api/assetdeliverer.php');
+	route('GET',      '/asset/', '/private/gameapis/assetdeliverer.php');
+	route('GET',      '/Asset/', '/private/gameapis/assetdeliverer.php');
 	route('GET',      '/users/[i:userId]/canmanage/[i:placeId]', '/private/api/users/canmanage.php');
 	route('GET',      '/users/[i:userId]/canmanage/[i:placeId]/', '/private/api/users/canmanage.php');
 	route('GET',      '/Users/[i:userId]', '/private/api/users/data.php');
@@ -241,7 +250,7 @@
 	route('GET|POST', '/mobileapi/securesignup', '/private/api/mobile/securesignup.php');
 
 	route('GET',      '/UserCheck/getrecommendedusername', '/private/api/mobile/getrecommendedusername.php');
-
+	
 	$match = $router->match();
 
 	if (is_array($match) && is_callable($match['target'])) {

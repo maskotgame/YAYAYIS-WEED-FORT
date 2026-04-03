@@ -175,10 +175,10 @@
 				$handle = fopen($filename, "r"); 
 				$contents = fread($handle, filesize($filename)); 
 				fclose($handle);
-				$contents = str_replace("www.roblox.com", "arl.lambda.cam",$contents);
-				$contents = str_replace("api.roblox.com", "arl.lambda.cam",$contents);
+				$contents = str_replace("www.roblox.com", "{anorrldomain}",$contents);
+				$contents = str_replace("api.roblox.com", "{anorrldomain}",$contents);
 
-				return str_replace("arl.lambda.cam", $_SERVER['SERVER_NAME'], $contents);
+				return str_replace("{anorrldomain}", CONFIG->domain, $contents);
 			}
 			
 			return null;

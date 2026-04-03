@@ -76,10 +76,10 @@
 	<head>
 		<title>Publish Place - ANORRL</title>
 		<link rel="icon" type="image/x-icon" href="/favicon.ico">
-		<link rel="stylesheet" href="/css/new/main.css">
-		<link rel="stylesheet" href="/css/new/publish.css">
-		<script src="/js/core/jquery.js"></script>
-		<script src="/js/main.js?t=1771413807"></script>
+		<link rel="stylesheet" href="/public/css/new/main.css">
+		<link rel="stylesheet" href="/public/css/new/publish.css">
+		<script src="/public/js/core/jquery.js"></script>
+		<script src="/public/js/main.js?t=1771413807"></script>
 	</head>
 	<body>
 		<div id="Container">
@@ -158,7 +158,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<title>Upload</title>
-		<link href="/css/RobloxOld.css" rel="stylesheet" type="text/css" />
+		<link href="/public/css/RobloxOld.css" rel="stylesheet" type="text/css" />
 	</head>
 	<body bgcolor="buttonface" scroll="no">
 		<form name="PublishContent" method="post" action="Upload.aspx" id="PublishContent">

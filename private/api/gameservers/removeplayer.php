@@ -1,11 +1,6 @@
 <?php
 	use anorrl\User;
-
-	$settings = parse_ini_file($_SERVER['DOCUMENT_ROOT']."/../settings.env", true);
 	
-	$rcc_settings = $settings['renderer'];
-	$access = $settings['asset']['ACCESSKEY'];
-
 	function getServerDetailsFromJobID(string $jobID): array|null {
 		include $_SERVER['DOCUMENT_ROOT']."/core/connection.php";
 
@@ -23,7 +18,7 @@
 	}
 
 	if(isset($_GET['access']) && isset($_GET['jobID']) && isset($_GET['userID'])) {
-		if($_GET['access'] == $access) {
+		if($_GET['access'] == CONFIG->asset->key) {
 			$server_details = getServerDetailsFromJobID($_GET['jobID']);
 			$user = User::FromID(intval($_GET['userID']));
 

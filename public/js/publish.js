@@ -12,16 +12,16 @@ ANORRL.Publish = {
 				$("body").css("background", "buttonface");
 			}, 1000);
 
-			
+			var domain = $("body").attr("domain");
 			
 			window.setTimeout(function() {
 				try {
-					window.external.SaveUrl('http://arl.lambda.cam/Data/Upload.ashx?assetid='+actionparams);
+					window.external.SaveUrl('http://'+domain+'/Data/Upload.ashx?assetid='+actionparams);
 					document.getElementById("Uploading").style.display='none';
 					document.getElementById("Confirmation").style.display='block';
 				} catch (ex) {
 					try {
-						window.external.SaveUrl('http://arl.lambda.cam/Data/Upload.ashx?assetid='+actionparams);
+						window.external.SaveUrl('http://'+domain+'/Data/Upload.ashx?assetid='+actionparams);
 						document.getElementById("Uploading").style.display='none';
 						document.getElementById("Confirmation").style.display='block';
 					} catch (ex2) {

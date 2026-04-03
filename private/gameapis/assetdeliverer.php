@@ -20,10 +20,8 @@
 		return $file_info->buffer($contents);
 	}
 
-	$settings = parse_ini_file($_SERVER['DOCUMENT_ROOT']."/../settings.env", true);
-
-	$access = $settings['asset']['ACCESSKEY'];
-	$roblosec = $settings['asset']['ROBLOSEC'];
+	$access = CONFIG->asset->key;
+	$domain = CONFIG->domain;
 	
 	$user = SESSION ? SESSION->user : null;
 
@@ -91,8 +89,9 @@
 			die(http_response_code(404));
 		}
 	} else {
-		
-		if(CONFIG->asset->canforward) {
+		$roblosec = CONFIG->asset->roblosec;
+		if(CONFIG->asset->canforward && strlen(trim($roblosec)) != 0) {
+			
 
 			if(isset($_GET['version'])) {
 				$version = intval($_GET['version']);
@@ -128,7 +127,7 @@
 				} else {
 					header("Content-Type: $mimetype");
 
-					$contents = str_replace("www.roblox.com", "arl.lambda.cam",$output);
+					$contents = str_replace("www.roblox.com", $domain, $output);
 
 					if(!isset($_GET['version'])) {
 						file_put_contents($_SERVER['DOCUMENT_ROOT']."/../assets/rbx_".$id, $contents);
@@ -146,9 +145,13 @@
 					die(http_response_code(500));
 				}
 			}
+
+			echo $contents;	
 		
+		} else {
+			die(http_response_code(404));
 		}
 
-		echo $contents;	
+		
 	}
 ?>

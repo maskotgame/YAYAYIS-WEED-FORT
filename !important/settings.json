@@ -18,5 +18,6 @@
 		},
 		"token": "sha256 for ANSRAL",
 		"disabled": false
-	}
+	},
+	"domain": "arl.lambda.cam"
 }

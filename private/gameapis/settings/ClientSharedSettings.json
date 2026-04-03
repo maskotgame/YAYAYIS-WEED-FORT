@@ -8,7 +8,7 @@
 	"FIntDebugForceMSAASamples": 1000,
 	"DFIntDebugForceMSAASamples": 1000,
 	"FFlagUseModerationFilterTextV2": "True",
-	"FFlagModerationFilterTextUrlV2": "https://arl.lambda.cam/moderation/v2/filtertext",
+	"FFlagModerationFilterTextUrlV2": "https://{domain}/moderation/v2/filtertext",
 	"FFlagUseNewPhysicsSender": "True",
 	"GoogleAnalyticsAccountPropertyID": "UA-43420590-3",
 	"GoogleAnalyticsAccountPropertyIDPlayer": "UA-43420590-14",

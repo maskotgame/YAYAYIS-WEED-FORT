@@ -1,13 +1,9 @@
 <?php
 
-	$settings = parse_ini_file($_SERVER['DOCUMENT_ROOT']."/../settings.env", true);
+	$access = CONFIG->asset->key;
 	
-	$rcc_settings = $settings['renderer'];
-
-	$access = $settings['asset']['ACCESSKEY'];
-	
-	$arbiter_ip = $settings['arbiter']['LOC'];
-	$arbiter_token = $settings['arbiter']['token'];
+	$arbiter_ip = CONFIG->arbiter->location->private;
+	$arbiter_token = CONFIG->arbiter->token;
 
 	if(isset($_GET['access']) && isset($_GET['jobID'])) {
 		if($_GET['access'] == $access) {

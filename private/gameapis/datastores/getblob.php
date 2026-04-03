@@ -64,14 +64,12 @@
 		return null;
 	}
 	
-	$settings = parse_ini_file($_SERVER['DOCUMENT_ROOT']."/../settings.env", true);
-	$access = $settings['asset']['ACCESSKEY'];
 	//placeid={id}&userid=%d&access={access}
 	if(isset($_GET['placeid']) && isset($_GET['userid']) && isset($_GET['access'])) {
 		$place = Place::FromID(intval($_GET['placeid']));
 		$user = User::FromID(intval($_GET['userid']));
 
-		if($place != null && $user != null && !$user->IsBanned() && $access == $_GET['access']) {
+		if($place != null && $user != null && !$user->IsBanned() && CONFIG->asset->key == $_GET['access']) {
 
 			include $_SERVER['DOCUMENT_ROOT']."/core/connection.php";
 

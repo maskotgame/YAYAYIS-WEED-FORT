@@ -8,6 +8,7 @@
 	//?category=FreeModels&keyword=&num=30&page=1&sort=Relevance
 
 	$validresponse = false;
+	$domain = CONFIG->domain;
 
 	if(
 		isset($_GET['category']) &&
@@ -63,7 +64,7 @@
 						],
 						"Thumbnail" => [
 							"Final" => true,
-							"Url" => "https://arl.lambda.cam/thumbs/?id=".$asset->id."&sxy=75"
+							"Url" => "https://{$domain}/thumbs/?id=".$asset->id."&sxy=75"
 						],
 						"Voting" => [
 							"ShowVotes" => false

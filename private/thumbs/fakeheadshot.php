@@ -11,17 +11,19 @@
 		$user = User::FromID(1);
 	}
 
+	$domain = CONFIG->domain;
+
 	if($user->setprofilepicture) {
 		die(json_encode([
 			"Final" => true,
-			"Url" => "http://arl.lambda.cam/thumbs/profile?id=".$user->id."&nocompress",
-			"RetryUrl" => "http://arl.lambda.cam/thumbs/profile?id=".$user->id."&nocompress",
+			"Url" => "http://$domain/thumbs/profile?id=".$user->id."&nocompress",
+			"RetryUrl" => "http://$domain/thumbs/profile?id=".$user->id."&nocompress",
 		]));
 	} else {
 		die(json_encode([
 			"Final" => true,
-			"Url" => "http://arl.lambda.cam/thumbs/headshot?id=".$user->id."&nocompress",
-			"RetryUrl" => "http://arl.lambda.cam/thumbs/headshot?id=".$user->id."&nocompress",
+			"Url" => "http://$domain/thumbs/headshot?id=".$user->id."&nocompress",
+			"RetryUrl" => "http://$domain/thumbs/headshot?id=".$user->id."&nocompress",
 		]));
 	}
 

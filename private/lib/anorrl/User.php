@@ -703,9 +703,10 @@
 			$leftarmcolour = $colours['leftarm'];
 			$rightlegcolour = $colours['rightleg'];
 			$torsocolour = $colours['torso'];
+			$domain = CONFIG->domain;
 
 return <<<EOT
-<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://arl.lambda.cam/roblox.xsd" version="4">
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://$domain/roblox.xsd" version="4">
 	<External>null</External>
 	<External>nil</External>
 	<Item class="BodyColors" referent="RBXCCC36C132C584B37B29DB69EAE48292A">
@@ -724,23 +725,25 @@ EOT;
 		}
 
 		function GetCharacterAppearance(): string {
+			$domain = CONFIG->domain;
 			$getwearing = $this->GetWearingArray();
 
 			$userId = $this->id;
 			$parsedshit= "";
 
 			foreach($getwearing as $id) {
-				$parsedshit .= ";http://arl.lambda.cam/asset/?id=$id";
+				$parsedshit .= ";http://$domain/asset/?id=$id";
 			}
 
 			if(str_ends_with($parsedshit, ";")) {
 				$parsedshit = substr($parsedshit, 0, strlen($parsedshit)-1);
 			}
 			$time = time();
-			return "http://arl.lambda.cam/Asset/BodyColors.ashx?userId=$userId&t=$time$parsedshit";
+			return "http://$domain/Asset/BodyColors.ashx?userId=$userId&t=$time$parsedshit";
 		}
 
 		function GetCharacterAppearanceVerbose(): string {
+			$domain = CONFIG->domain;
 			$bodycoloursxml = $this->GetBodyColoursXML();
 			$getwearing = $this->GetWearingArray(true);
 
@@ -753,18 +756,18 @@ EOT;
 				$asset = Asset::FromID($id);
 				if($asset != null) {
 					$version = $asset->current_version;
-					$parsedshit .= "http://arl.lambda.cam/asset/?id=$id&version=$version;";
+					$parsedshit .= "http://$domain/asset/?id=$id&version=$version;";
 
 					$relatedassets = $asset->GetRelatedAssets();
 
 					if(count($relatedassets) != 0) {
 						foreach($relatedassets as $relatedasset) {
 							$subversion = $relatedasset->current_version;
-							$parsedshit .= "http://arl.lambda.cam/asset/?id=$id&version=$subversion;";
+							$parsedshit .= "http://$domain/asset/?id=$id&version=$subversion;";
 						}
 					}
 				} else {
-					// remove from everyone...
+					// remove from everyone... OMG WHY HAVEN'T YOU IMPLEMENTED THIS YET YOU FAT FUCK
 				}
 			}
 

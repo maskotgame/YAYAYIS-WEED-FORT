@@ -99,8 +99,12 @@
 		}
 
 		private static function PushWebhook(Asset $asset) {
-			$webhook_url = '';
-
+			if(strlen(trim(CONFIG->asset->webhook)) == 0 || !str_starts_with(CONFIG->asset->webhook, "https://discord.com/api/webhooks/")) {
+				return;
+			}
+			$webhook_url = trim(CONFIG->asset->webhook);
+			$domain = CONFIG->domain;
+			
 			$msg = [
 				"username" => "Catalog Hotline",
 				"content" => "New Catalog Item Dropped!",
@@ -108,14 +112,14 @@
 					[
 						"title" => $asset->name,
 						"description" => "Uploaded by: ".$asset->creator->name,
-						"url" => "https://arl.lambda.cam/".$asset->GetURLTitle()."-item?id=".$asset->id,
+						"url" => "https://$domain/".$asset->GetURLTitle()."-item?id=".$asset->id,
 						"author" => [
 							"name" => "ANORRL",
-							"url" => "https://arl.lambda.cam/",
-							"icon_url" => "https://arl.lambda.cam/images/download/2016client.png"
+							"url" => "https://$domain/",
+							"icon_url" => "https://$domain/images/download/2016client.png"
 						],
 						"thumbnail" => [
-							"url" => "https://arl.lambda.cam/thumbs/?id=".$asset->id
+							"url" => "https://$domain/thumbs/?id=".$asset->id
 						],
 					]
 				]

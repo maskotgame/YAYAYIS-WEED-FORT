@@ -3,11 +3,6 @@
 	use anorrl\Place;
 	use anorrl\User;
 	use anorrl\utilities\UserUtils;
-
-	$settings = parse_ini_file($_SERVER['DOCUMENT_ROOT']."/../settings.env", true);
-	$rcc_settings = $settings['renderer'];
-
-	$access = $settings['asset']['ACCESSKEY'];
 	
 	header("Content-Type: application/json");
 
@@ -123,9 +118,11 @@
 		return null;
 	}
 
-	$arbiter_ip = $settings['arbiter']['LOC'];
-    $arbiter_pub_ip = $settings['arbiter']['PUB_LOC'];
-    $arbiter_token = $settings['arbiter']['token'];
+	$access = CONFIG->asset->key;
+	$arbiter_ip = CONFIG->arbiter->location->private;
+	$arbiter_pub_ip = CONFIG->arbiter->location->public;
+	$arbiter_token = CONFIG->arbiter->token;
+	$domain = CONFIG->domain;
 
 	//
 	// request=RequestGame
@@ -250,8 +247,8 @@
 						[
 							"jobId" => "$jobIDThingy",
 							"status" => 2,
-							"joinScriptUrl" => "http://arl.lambda.cam/game/join.ashx?serverToken=$serverid&sessionToken=$sessionID&server=$arbiter_pub_ip",
-							"authenticationUrl" => "https://arl.lambda.cam/Login/Negotiate.ashx",
+							"joinScriptUrl" => "http://$domain/game/join.ashx?serverToken=$serverid&sessionToken=$sessionID&server=$arbiter_pub_ip",
+							"authenticationUrl" => "https://$domain/Login/Negotiate.ashx",
 							"authenticationTicket" => "$sessionID",
 							"message" => "HELLOOOOOOOO!!!!!"
 						]
@@ -375,13 +372,13 @@
 									"SeleniumTestMode" => false,
 									"UserId" => $user->id,
 									"SuperSafeChat" => false,
-									"CharacterAppearance" => "http://arl.lambda.cam/Asset/CharacterFetch.ashx?userId=".$user->id,
+									"CharacterAppearance" => "http://$domain/Asset/CharacterFetch.ashx?userId=".$user->id,
 									"ClientTicket" => $sessionID,
 									"GameId" =>"00000000-0000-0000-0000-000000000000",
 									"PlaceId" => $place->id,
 									"MeasurementUrl" => "",
 									"WaitingForCharacterGuid" => "16be1dd8-5462-4ca5-a997-0725d997708b",
-									"BaseUrl" => "http://arl.lambda.cam/",
+									"BaseUrl" => "http://$domain/",
 									"ChatStyle" => "ClassicAndBubble",
 									"VendorId" => 0,
 									"ScreenShotInfo" => "",
@@ -500,8 +497,8 @@
 						[
 							"jobId" => "$jobIDThingy",
 							"status" => 2,
-							"joinScriptUrl" => "http://arl.lambda.cam/game/join.ashx?serverToken=$serverid&sessionToken=$sessionToken&server=$arbiter_pub_ip",//",
-							"authenticationUrl" => "https://arl.lambda.cam/Login/Negotiate.ashx",
+							"joinScriptUrl" => "http://$domain/game/join.ashx?serverToken=$serverid&sessionToken=$sessionToken&server=$arbiter_pub_ip",//",
+							"authenticationUrl" => "https://$domain/Login/Negotiate.ashx",
 							"authenticationTicket" => "$sessionToken",
 							"message" => "HELLOOOOOOOO!!!!!"
 						]

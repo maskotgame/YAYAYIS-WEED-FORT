@@ -5,11 +5,8 @@
 	use anorrl\Place;
 	use anorrl\enums\AssetType;
 	use anorrl\utilities\AssetUploader;
-
-	$settings = parse_ini_file($_SERVER['DOCUMENT_ROOT']."/../settings.env", true);
-	$rcc_settings = $settings['renderer'];
-
-	$access = $settings['asset']['ACCESSKEY'];
+	
+	$access = CONFIG->asset->key;
 	
 	$user = SESSION ? SESSION->user : null;
 

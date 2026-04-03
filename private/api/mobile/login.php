@@ -9,6 +9,8 @@
 		$result = UserUtils::LoginUser($_POST['username'], $_POST['password']);
 		$user = UserUtils::RetrieveUser();
 	}
+
+	$domain = CONFIG->domain;
 ?>
 
 <?php 
@@ -22,7 +24,7 @@ if($result["login"] != "Incorrect details provided!"): ?>
 		"RobuxBalance": 69,
 		"TicketsBalance": 420,
 		"IsAnyBuildersClubMember": false,
-		"ThumbnailUrl": "http://arl.lambda.cam/thumbs/player?id=<?= $user->id ?>"
+		"ThumbnailUrl": "http://<?= $domain ?>/thumbs/player?id=<?= $user->id ?>"
 	}
 }
 <?php else: ?>

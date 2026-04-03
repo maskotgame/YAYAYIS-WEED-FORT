@@ -2,14 +2,14 @@
 <html>
 	<head>
 		<title>Toolbox</title>
-		<link rel="stylesheet" href="/css/toolbox.css"/>
-		<script type="text/javascript" src="/js/core/jquery.js"></script>
-		<script type="text/javascript" src="/js/core/jquery-migrate.js"></script>
-		<script type="text/javascript" src="/js/toolbox.js"></script>
+		<link rel="stylesheet" href="/public/css/toolbox.css"/>
+		<script type="text/javascript" src="/public/js/core/jquery.js"></script>
+		<script type="text/javascript" src="/public/js/core/jquery-migrate.js"></script>
+		<script type="text/javascript" src="/public/js/toolbox.js"></script>
 	</head>
 	<body class="Page" style="margin: 0;">
 		<input name="__RequestVerificationToken" type="hidden" value="6_eZHOjUPq8Jhw66Ug0so8DxlG33_rZY0TrLaXEc7aMbOKqRbphTsdZWYh_pBl5ud60toqWtjSAZmQHQU93ZLxukFYLaUIRjFnWCQD57CiwhlECKHNRU2ejI5FDEhDWcZ1Ru3g2"/>
-		<div id="NewToolboxContainer" data-isuserauthenticated="<?= !SESSION ? "false" : "true" ?>" data-isdecalcreationenabled="true" data-requesturl="http://arl.lambda.cam/asset/" data-isrecentlyinsertedassetenabled="false">
+		<div id="NewToolboxContainer" data-isuserauthenticated="<?= !SESSION ? "false" : "true" ?>" data-isdecalcreationenabled="true" data-requesturl="http://<?= CONFIG->domain ?>/asset/" data-isrecentlyinsertedassetenabled="false">
 			<div id="ToolboxControls">
 				<div id="SetTabs">
 					<div id="Inventory" class="Tabs">Inventory</div>

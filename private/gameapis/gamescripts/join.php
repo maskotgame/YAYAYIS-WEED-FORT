@@ -38,7 +38,7 @@
 		return null;
 	}
 
-	ob_start();
+	$domain = CONFIG->domain;
 ?>
 <?php if(!isset($_GET['serverToken']) && !isset($_GET['sessionToken']) && !isset($_GET['server'])):
 	$joinscript = [
@@ -51,13 +51,13 @@
 		"SeleniumTestMode" => true,
 		"UserId" => 0,
 		"SuperSafeChat" => false,
-		"CharacterAppearance" => "http://arl.lambda.cam/Asset/CharacterFetch.ashx?userId=1&placeId=0",
+		"CharacterAppearance" => "http://$domain/Asset/CharacterFetch.ashx?userId=1&placeId=0",
 		"ClientTicket" => "",
 		"GameId" => "00000000-0000-0000-0000-000000000000",
 		"PlaceId" => 0,
 		"MeasurementUrl" => "",
 		"WaitingForCharacterGuid" => "16be1dd8-5462-4ca5-a997-0725d997708b",
-		"BaseUrl" => "http://arl.lambda.cam/",
+		"BaseUrl" => "http://$domain/",
 		"ChatStyle" => "ClassicAndBubble",
 		"VendorId" => 0,
 		"ScreenShotInfo" => "",
@@ -90,7 +90,6 @@
 	header("Content-Type: application/json");
 
 	$script = "\r\n" . json_encode($joinscript);
-	$script = str_replace("arl.lambda.cam",$_SERVER['SERVER_NAME'], $script);
 	$signature = get_signature($script);
 
 	die("--rbxsig%". $signature . "%" . $script);
@@ -106,14 +105,14 @@
 	"SeleniumTestMode" => false,
 	"UserId" =>  {playerid},
 	"SuperSafeChat" => {SuperSafeChat},
-	"CharacterAppearance" => "http://arl.lambda.cam/Asset/CharacterFetch.ashx?userId={playerid}",
+	"CharacterAppearance" => "http://$domain/Asset/CharacterFetch.ashx?userId={playerid}",
 	"ClientTicket" => "{sessionid}",
 	"GameId" => "00000000-0000-0000-0000-000000000000",
 	"PlaceId" => {placeid},
 	"MeasurementUrl" => "",
 	"WaitingForCharacterGuid" => 
 	"16be1dd8-5462-4ca5-a997-0725d997708b",
-	"BaseUrl" => "http://arl.lambda.cam/",
+	"BaseUrl" => "http://$domain/",
 	"ChatStyle" => "ClassicAndBubble",
 	"VendorId" => 0,
 	"ScreenShotInfo" => "",
@@ -170,7 +169,6 @@
 			$placecreator = $place->creator->id;
 
 			$script = "\r\n" . ob_get_clean();
-			$script = str_replace("arl.lambda.cam",$_SERVER['SERVER_NAME'], $script);
 			$script = str_replace("{SuperSafeChat}", "false", $script);
 			$script = str_replace("{playerid}",$playerid, $script);
 			$script = str_replace("{playerage}",$player->GetAccountAge(), $script);

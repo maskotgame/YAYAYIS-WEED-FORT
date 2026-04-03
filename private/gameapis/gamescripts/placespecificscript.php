@@ -1,6 +1,6 @@
 <?php ob_start(); ?>
-game:GetService("Players"):SetSaveDataUrl("http://arl.lambda.cam/Persistence/SetBlob.ashx?placeid={id}&userid=%d&access={access}")
-game:GetService("Players"):SetLoadDataUrl("http://arl.lambda.cam/Persistence/GetBlob.ashx?placeid={id}&userid=%d&access={access}")
+game:GetService("Players"):SetSaveDataUrl("http://{domain}/Persistence/SetBlob.ashx?placeid={id}&userid=%d&access={access}")
+game:GetService("Players"):SetLoadDataUrl("http://{domain}/Persistence/GetBlob.ashx?placeid={id}&userid=%d&access={access}")
 
 game:GetService("Players").PlayerAdded:connectFirst(function(player)
 	--player:LoadData()	
@@ -11,6 +11,8 @@ game:GetService("Players").PlayerRemoving:connectLast(function(player)
 end)
 <?php
 	use anorrl\Place;
+
+	$domain = CONFIG->domain;
 	
 	function get_signature($script) {
 		$signature = "";
@@ -25,6 +27,7 @@ end)
 
 		if($place != null) {
 			$script = "\r\n" . ob_get_clean();
+			$script = str_replace("{domain}", $domain, $script);
 			$script = str_replace("{id}", $_GET['PlaceId'], $script);
 			$script = str_replace("{access}", $_GET['access'], $script);
 			$signature = get_signature($script);

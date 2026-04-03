@@ -82,7 +82,8 @@
 		}
 
 		private static function GetTemplate(string $filename): string {
-			return file_get_contents($_SERVER['DOCUMENT_ROOT']."/private/templates/assets/$filename.rbxm");
+			$file = file_get_contents($_SERVER['DOCUMENT_ROOT']."/private/templates/assets/$filename.rbxm");
+			return self::Replace("domain", CONFIG->domain, $file);
 		}
 
 		public static function Replace(string $var, mixed $val, string $data) {

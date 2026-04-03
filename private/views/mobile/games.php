@@ -8,14 +8,14 @@
 <!DOCTYPE html>
 <html> 
 	<head>
-		<link rel="stylesheet" href="/css/new/main.css">
-		<link rel="stylesheet" href="/css/new/forms.css">
-		<link rel="stylesheet" href="/css/new/stuff.css?v=1">
+		<link rel="stylesheet" href="/public/css/new/main.css">
+		<link rel="stylesheet" href="/public/css/new/forms.css">
+		<link rel="stylesheet" href="/public/css/new/stuff.css?v=1">
 		<title>Games - ANORRL</title>
 		<link rel="icon" type="image/x-icon" href="/favicon.ico">
-		<script src="/js/core/jquery.js"></script>
-		<script src="/js/main.js?t=1771413807"></script>
-		<script src="/js/games.js?t=1771413807"></script>
+		<script src="/public/js/core/jquery.js"></script>
+		<script src="/public/js/main.js?t=1771413807"></script>
+		<script src="/public/js/games.js?t=1771413807"></script>
 		<script>
 			ANORRL.Games.MobileEnabled = true;
 		</script>

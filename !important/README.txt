@@ -16,10 +16,10 @@ also the other folders NEED to be set to the same permissions as the webserver o
 
 what needs to be in the root...
 
-settings.env
+settings.json
 PrivateKey.pem (generated from RBXSIGTOOLS but any rsa private key generator works)
 
 some info..
 
-anorrldb.sql is meant to be loaded in via phpmyadmin ALSO it is just the structure only ALSO it doesn't have to be named anorrldb (you can change that in settings.env)
-settings.env HAS to be changed before being used for production. It is just a template right now.
+anorrldb.sql is meant to be loaded in via phpmyadmin ALSO it is just the structure only ALSO it doesn't have to be named anorrldb (you can change that in settings.json)
+settings.json HAS to be changed before being used for production. It is just a template right now.

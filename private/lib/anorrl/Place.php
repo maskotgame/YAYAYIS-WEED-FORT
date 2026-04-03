@@ -132,9 +132,8 @@
 						"pid" => $row['server_pid']
 					]);
 
-					$settings = parse_ini_file($_SERVER['DOCUMENT_ROOT']."/../settings.env", true);
-					$arbiter_ip = $settings['arbiter']['LOC'];
-					$arbiter_token = $settings['arbiter']['token'];
+					$arbiter_ip = CONFIG->arbiter->location->private;
+					$arbiter_token = CONFIG->arbiter->token;
 
 					$ch = curl_init("http://$arbiter_ip/api/v1/gameserver/kill");
 					curl_setopt($ch, CURLOPT_HTTPHEADER, [
