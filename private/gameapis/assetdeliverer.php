@@ -137,13 +137,18 @@
 				}
 				
 			} else {
-				$contents = file_get_contents($_SERVER['DOCUMENT_ROOT']."/../assets/rbx_".$id.(isset($_GET['version']) ?  "_".$version : ""));
-				header("Content-Type: ".checkMimeType($contents));
-				if(str_contains(checkMimeType($contents), "json")) {
-					echo "Unauthorised access to this roblox asset!";
-					file_put_contents($_SERVER['DOCUMENT_ROOT']."/../assets/rbx_".$id.(isset($_GET['version']) ?  "_".$version : ""), "");
-					die(http_response_code(500));
+				if($id > 10420) {
+					$contents = file_get_contents($_SERVER['DOCUMENT_ROOT']."/../assets/rbx_".$id.(isset($_GET['version']) ?  "_".$version : ""));
+					header("Content-Type: ".checkMimeType($contents));
+					if(str_contains(checkMimeType($contents), "json")) {
+						echo "Unauthorised access to this roblox asset!";
+						file_put_contents($_SERVER['DOCUMENT_ROOT']."/../assets/rbx_".$id.(isset($_GET['version']) ?  "_".$version : ""), "");
+						die(http_response_code(500));
+					}
+				} else {
+					die(http_response_code(404));
 				}
+				
 			}
 
 			echo $contents;	
