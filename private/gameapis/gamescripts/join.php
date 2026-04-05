@@ -95,46 +95,7 @@
 	die("--rbxsig%". $signature . "%" . $script);
 else: 
 
-$joinscript = [
-	"ClientPort" => 0,
-	"MachineAddress" => "{server}",
-	"ServerPort" => {serverport},
-	"PingUrl" => "",
-	"PingInterval" => 120,
-	"UserName" => "{playername}",
-	"SeleniumTestMode" => false,
-	"UserId" =>  {playerid},
-	"SuperSafeChat" => {SuperSafeChat},
-	"CharacterAppearance" => "http://$domain/Asset/CharacterFetch.ashx?userId={playerid}",
-	"ClientTicket" => "{sessionid}",
-	"GameId" => "00000000-0000-0000-0000-000000000000",
-	"PlaceId" => {placeid},
-	"MeasurementUrl" => "",
-	"WaitingForCharacterGuid" => 
-	"16be1dd8-5462-4ca5-a997-0725d997708b",
-	"BaseUrl" => "http://$domain/",
-	"ChatStyle" => "ClassicAndBubble",
-	"VendorId" => 0,
-	"ScreenShotInfo" => "",
-	"VideoInfo" => "",
-	"CreatorId" => {placecreator},
-	"CreatorTypeEnum" => "User",
-	"MembershipType" => "None",
-	"AccountAge" => {playerage},
-	"CookieStoreFirstTimePlayKey" => "rbx_evt_ftp",
-	"CookieStoreFiveMinutePlayKey" => "rbx_evt_fmp",
-	"CookieStoreEnabled" => true,
-	"IsRobloxPlace" => true,
-	"GenerateTeleportJoin" => false,
-	"IsUnknownOrUnder13" => false,
-	"SessionId" => "{sessionid}",
-	"DataCenterId" => 0,
-	"UniverseId" => 0,
-	"BrowserTrackerId" => 0,
-	"UsePortraitMode" => false,
-	"FollowUserId" => 0,
-	"characterAppearanceId" => {playerid}
-];
+
 
 	function get_signature($script)
 	{
@@ -162,21 +123,50 @@ $joinscript = [
 				UserUtils::SetCookies($player->security_key);
 			}
 
-			$playerid = $player->id;
-			$playername = $player->name;
-			$serverport = $serverDetails['server_port'];
-			$placeid = $place->id;
-			$placecreator = $place->creator->id;
+			$serverport = $serverDetails['server_port'];	
 
-			$script = "\r\n" . ob_get_clean();
-			$script = str_replace("{SuperSafeChat}", "false", $script);
-			$script = str_replace("{playerid}",$playerid, $script);
-			$script = str_replace("{playerage}",$player->GetAccountAge(), $script);
-			$script = str_replace("{playername}",$playername, $script);
-			$script = str_replace("{serverport}",$serverport, $script);
-			$script = str_replace("{placeid}",$placeid, $script);
-			$script = str_replace("{placecreator}",$placecreator, $script);
-			$script = str_replace("{server}",$server, $script);
+			$joinscript = [
+				"ClientPort" => 0,
+				"MachineAddress" => "$server",
+				"ServerPort" => (int)$serverport,
+				"PingUrl" => "",
+				"PingInterval" => 120,
+				"UserName" => "{$player->name}",
+				"SeleniumTestMode" => false,
+				"UserId" => (int)$player->id,
+				"SuperSafeChat" => false,
+				"CharacterAppearance" => "http://$domain/Asset/CharacterFetch.ashx?userId={$player->id}",
+				"ClientTicket" => "{sessionid}",
+				"GameId" => "00000000-0000-0000-0000-000000000000",
+				"PlaceId" => $place->id,
+				"MeasurementUrl" => "",
+				"WaitingForCharacterGuid" => 
+				"16be1dd8-5462-4ca5-a997-0725d997708b",
+				"BaseUrl" => "http://$domain/",
+				"ChatStyle" => "ClassicAndBubble",
+				"VendorId" => 0,
+				"ScreenShotInfo" => "",
+				"VideoInfo" => "",
+				"CreatorId" => $place->creator->id,
+				"CreatorTypeEnum" => "User",
+				"MembershipType" => "None",
+				"AccountAge" => $player->GetAccountAge(),
+				"CookieStoreFirstTimePlayKey" => "rbx_evt_ftp",
+				"CookieStoreFiveMinutePlayKey" => "rbx_evt_fmp",
+				"CookieStoreEnabled" => true,
+				"IsRobloxPlace" => true,
+				"GenerateTeleportJoin" => false,
+				"IsUnknownOrUnder13" => false,
+				"SessionId" => "{sessionid}",
+				"DataCenterId" => 0,
+				"UniverseId" => 0,
+				"BrowserTrackerId" => 0,
+				"UsePortraitMode" => false,
+				"FollowUserId" => 0,
+				"characterAppearanceId" => $player->id
+			];
+
+			$script = "\r\n" . json_encode($joinscript);
 			$signature = get_signature($script);
 
 			exit("--rbxsig%". $signature . "%" . $script);
