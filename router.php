@@ -117,6 +117,7 @@
 	route('GET',      '/asset/', '/private/gameapis/assetdeliverer.php');
 	route('GET',      '/Asset/', '/private/gameapis/assetdeliverer.php');
 	route('GET',      '/users/[i:userId]/canmanage/[i:placeId]', '/private/api/users/canmanage.php');
+	route('GET',      '//users/[i:userId]/canmanage/[i:placeId]', '/private/api/users/canmanage.php');
 	route('GET',      '/users/[i:userId]/canmanage/[i:placeId]/', '/private/api/users/canmanage.php');
 	route('GET',      '/Users/[i:userId]', '/private/api/users/data.php');
 	route('GET',      '/users/get-by-username', '/private/api/users/get-by-username.php');
@@ -180,6 +181,7 @@
 	route('GET',      '/Game/logout.aspx', '/private/api/logout.php');
 
 	route('GET',      '/game/players/[i:id]', '/private/api/users/players.php');
+	route('GET',      '//game/players/[i:id]', '/private/api/users/players.php');
 	route('GET',      '/game/players/[i:id]/', '/private/api/users/players.php');
 
 	route('GET',      '/my/settings/json', '/private/gameapis/authentication/settings.php');
@@ -221,8 +223,8 @@
 	route('GET',      '/Asset/BodyColors.ashx', '/private/gameapis/character/bodycolors.php');
 	route('GET',      '/Asset/CharacterFetch.ashx', '/private/gameapis/character/characterfetch.php');
 
-	route('GET',      '/game/MachineConfiguration.ashx', '/private/gameapis/authentication/machineconfiguration.txt');
-	route('GET',      '/Game/MachineConfiguration.ashx', '/private/gameapis/authentication/machineconfiguration.txt');
+	route('GET|POST', '/game/MachineConfiguration.ashx', '/private/gameapis/authentication/machineconfiguration.txt');
+	route('GET|POST', '/Game/MachineConfiguration.ashx', '/private/gameapis/authentication/machineconfiguration.txt');
 
 	route('GET',      '/Game/Tools/InsertAsset.ashx', '/private/api/insertasset.php');
 
