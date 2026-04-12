@@ -4,18 +4,14 @@
 	use anorrl\utilities\ClientDetector;
 	use anorrl\utilities\UtilUtils;
 
-	if(!SESSION) {
-		die(header("Location: /login"));
-	}
-
 	$user = SESSION->user;
 
 	$isclient = ClientDetector::IsAClient();
 	if(!$isclient)
 		die("Hey something isn't right here... You sure you're using the right studio?");
 	
-	$places = $user->GetPlaces(false);
-	$teamplaces = $user->GetPlaces(true);
+	$places = $user->getPlaces(false);
+	$teamplaces = $user->getPlaces(true);
 
 	$domain = CONFIG->domain;
 

@@ -1,11 +1,7 @@
 <?php
 	use anorrl\Page;
 
-	if(!SESSION) {
-		die(header("Location: /login"));
-	}
-
-	$page = new Page("Your Character");
+	$page = new Page("Your Character", "my/character");
 	$page->addScript("/js/core/jquery-modal.js");
 	$page->addScript("/js/character.js?t=1771413909");
 

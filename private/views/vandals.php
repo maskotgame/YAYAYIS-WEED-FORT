@@ -2,14 +2,7 @@
 	
 	use anorrl\Page;
 	use anorrl\utilities\FileSplasher;
-	use anorrl\utilities\UserUtils;
-
-	$user = UserUtils::RetrieveUser();
-
-	if($user == null) {
-		die(header("Location: /login"));
-	}
-
+	
     //took this from games.php but idrc atp -skylerclock
 	$randomsplash = new FileSplasher("people")->getRandomSplash();
 

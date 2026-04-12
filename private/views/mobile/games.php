@@ -1,10 +1,3 @@
-<?php
-	session_start();
-	
-	if(!SESSION) {
-		die(header("Location: /login"));
-	}
-?>
 <!DOCTYPE html>
 <html> 
 	<head>

@@ -6,14 +6,14 @@
 	header("Pragma: no-cache");
 	header("Content-Type: application/json");
 
-	$user = SESSION ? SESSION->user : null;
+	$user = SESSION->user;
 
 	if(isset($_POST['followedUserId']) && $user != null) {
 		$toFollowUser = User::FromID(intval($_POST['followedUserId']));
 
 		if($toFollowUser != null) {
-			if($user->IsFollowing($toFollowUser)) {
-				$user->Unfollow($toFollowUser);
+			if($user->isFollowing($toFollowUser)) {
+				$user->unfollow($toFollowUser);
 
 				die(json_encode(
 					[

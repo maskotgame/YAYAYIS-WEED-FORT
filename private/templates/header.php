@@ -1,4 +1,5 @@
 <?php
+	use anorrl\UserSettings;
 	use anorrl\utilities\Splasher;
 	use anorrl\utilities\FileSplasher;
 	use anorrl\utilities\UtilUtils;
@@ -6,6 +7,7 @@
 	$header_check_user = SESSION ? SESSION->user : null;
 
 	$rand_pic = new Splasher(UtilUtils::GetFilesArray("/images/randoms/"), false, "RandomImages")->getRandomSplash();
+	$rand_splash_pic = new Splasher(UtilUtils::GetFilesArray("/images/splashes/"), false, "SplashScreen")->getRandomSplash();
 
 	$randomsignsplash = new FileSplasher("sign")->getRandomSplash();
 
@@ -17,12 +19,29 @@
 
 	//this is so that if the user ever sets 'background:' on the profile css it'll not apply the night background
 	//because the night background can override the user's background
+	$hasBackground = false;
 	if (isset($get_user)) {
-		$userCSS = SESSION->settings->css;
+		$userCSS = UserSettings::Get($get_user)->css;
 		if (!empty($userCSS) && preg_match('/background\s*:/i', $userCSS)) {
+			$hasBackground = true;
+		}
+	} else {
+		$userCSS = SESSION ? SESSION->settings->css : "";
+		if (!empty($userCSS) && preg_match('/background\s*:/i', $userCSS)) {
+			$hasBackground = true;
 			$this->addStylesheet("/users/{$header_check_user->id}/css");
 		}
 	}
+
+	/*
+	$hasBackground = false;
+	if (isset($get_user)) {
+   		$userCss = $header_data->GetUserCSS();
+    	if (!empty($userCss) && preg_match('/background\s*:/i', $userCss)) {
+        	$hasBackground = true;
+    	}
+	}
+	*/
 ?>
 <!DOCTYPE html>
 <html>
@@ -41,8 +60,63 @@
 			<meta property="<?= $meta['type'] ?>" content="<?= $meta['contents'] ?>">
 			<?php endforeach ?>
 		<?php endif ?>
+		<?php if($this->settings->loadingscreens_enabled): ?>
+		<style>
+			#LoadingScreen {
+				inset: 0;
+				position: fixed;
+				width: 100vw;
+				height: 100vh;
+				background: linear-gradient(#333, black);
+				z-index: 10000;
+				color: white;
+				text-align: center;
+				display:flex;
+				font-size: 16px;
+				justify-content: center;
+				align-items: center;
+				transition: opacity 1s;
+			}
+
+			#LoadingScreen img[splash] {
+				border-radius: 5px;
+			}
+		</style>
+		<script>
+			
+			const wait = (delay = 0) =>	new Promise(resolve => setTimeout(resolve, delay));
+
+			function setVisible(element, visible) {
+				$(element).css("display", visible ? "block" : "none");
+			}
+
+			setVisible('#LoadingScreen', true);
+			
+
+			document.addEventListener('DOMContentLoaded', function() {
+				// mom im a genius
+				wait(500).then(() => {
+					$("#LoadingScreen").css("opacity", "0");
+					$("#LoadingScreen").css("pointer-events", "none");
+					
+				});
+				wait(1500).then(() => {
+					setVisible('#LoadingScreen', false);
+				});
+			});
+		</script>
+		<?php endif ?>
 	</head>
-	<body <?= $this->settings->nightbg_enabled ? "night" : "" ?>>
+	<body <?= $this->settings->nightbg_enabled && !$hasBackground ? "night" : "" ?>>
+		<?php if($this->settings->loadingscreens_enabled): ?>
+		<div id="LoadingScreen">
+			<div>
+				<img src="/images/splashes/<?= $rand_splash_pic ?>" splash>
+				<p id="LoadingText">Loading <?= $this->title ?>...</p>
+				<img src="/images/ProgressIndicator4White.gif">
+			</div>
+		</div>
+		<?php endif ?>
 		<?php if($this->bad_apple): ?>
 		<style>
 			body {
@@ -51,7 +125,7 @@
 		</style>
 		<?php endif ?>
 		<?php if($this->settings->randoms_enabled): ?>
-		<img src="/images/randoms/<?= $rand_pic ?>" style="position: fixed;bottom: 0px;left: 0px;width: 250px;z-index: 9999;">
+		<img src="/images/randoms/<?= $rand_pic ?>" style="position: fixed;bottom: 0px;left: 0px;width: 250px;z-index: 9999;pointer-events: none;">
 		<?php endif ?>
 		<?php if($this->settings->teto_enabled): ?>
 		<div id="TetoContainer">
@@ -87,7 +161,7 @@
 
 						<hr>
 						<span title="Your pending requests"><a href="/my/friends"><img src="/images/icons/messages<?= $pendingreqscount == 0 ? "" : "_notify" ?>.png"> <?= $pendingreqscount ?></a></span> <span class="Separator">|</span>
-						<span title="Your friends"><a href="/my/friends"><img src="/images/icons/friends.png"> <?= $header_check_user->GetFriendsCount() ?></a></span>
+						<span title="Your friends"><a href="/my/friends"><img src="/images/icons/friends.png"> <?= $header_check_user->getFriendsCount() ?></a></span>
 						<hr>
 						<span title="Message" style="width:auto"><?= $randomsignsplash ?><a href="/images/anorrl-smile.png" target="_blank" style="display: block;"><img src="/images/anorrl-smile.png" style="width: 42px;margin: 2px 0px;"></a></span>
 					</div>
@@ -115,13 +189,13 @@
 					<a href="/vandals">Vandals</a>
 				</div>
 				<div id="UserLinks" >
-					<a href="/my/home"      <?php if($_SERVER['SCRIPT_NAME'] == "/private/views/my/home.php"     		 ):?>selected<?php endif ?>>Home</a>
-					<a href="/my/profile"   <?php if($_SERVER['SCRIPT_NAME'] == "/private/views/my/profile.php"  		 ):?>selected<?php endif ?>>Account</a>
-					<a href="/my/character" <?php if($_SERVER['SCRIPT_NAME'] == "/private/views/my/character.php"		 ):?>selected<?php endif ?>>Character</a>
-					<a href="/my/friends"   <?php if($_SERVER['SCRIPT_NAME'] == "/private/views/my/friends.php"		     ):?>selected<?php endif ?>>Friends</a>
-					<a href="/create/"      <?php if($_SERVER['SCRIPT_NAME'] == "/private/views/create.php" 		     ):?>selected<?php endif ?>>Create</a>
-					<a href="/my/stuff"     <?php if($_SERVER['SCRIPT_NAME'] == "/private/views/my/stuff.php"    		 ):?>selected<?php endif ?>>Stuff</a>
-					<a href="/download"     <?php if($_SERVER['SCRIPT_NAME'] == "/private/views/download/index.php"      ):?>selected<?php endif ?>>Download</a>
+					<a href="/my/home"      <?php if($this->internal_name == "my/home"		 ):?>selected<?php endif ?>>Home</a>
+					<a href="/my/profile"   <?php if($this->internal_name == "my/profile"	 ):?>selected<?php endif ?>>Account</a>
+					<a href="/my/character" <?php if($this->internal_name == "my/character"	 ):?>selected<?php endif ?>>Character</a>
+					<a href="/my/friends"   <?php if($this->internal_name == "my/friends"	 ):?>selected<?php endif ?>>Friends</a>
+					<a href="/create/"      <?php if($this->internal_name == "my/create"	 ):?>selected<?php endif ?>>Create</a>
+					<a href="/my/stuff"     <?php if($this->internal_name == "my/stuff"		 ):?>selected<?php endif ?>>Stuff</a>
+					<a href="/download"     <?php if($this->internal_name == "download/index"):?>selected<?php endif ?>>Download</a>
 				</div>
 				<?php if($header_check_user->pendingStipend()): ?>
 				<div id="StipendThingy">
@@ -132,7 +206,6 @@
 				<?php else: ?>
 				<div id="Links"></div>
 				<?php endif ?>
-				
 			</div>
 			<div class="DisplayMobileWarning" style="display: none">
 				<div id="MobileWarningText">

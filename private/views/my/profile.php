@@ -1,10 +1,5 @@
 <?php
-	use anorrl\Asset;
 	use anorrl\Page;
-
-	if(!SESSION) {
-		die(header("Location: /login"));
-	}
 
 	$user = SESSION->user;
 	$settings = SESSION->settings;
@@ -12,7 +7,7 @@
 	if(isset($_POST['ANORRL$Update$Profile$Bio']) &&
 	   isset($_POST['ANORRL$Update$Profile$Submit'])) {
 		
-		$result = $user->UpdateBio(trim($_POST['ANORRL$Update$Profile$Bio']));
+		$result = $user->updateBio(trim($_POST['ANORRL$Update$Profile$Bio']));
 
 		if($result['error']) {
 			$_SESSION['ANORRL$Update$ProfileError'] = true;
@@ -48,7 +43,7 @@
 	if(isset($_FILES['ANORRL$Update$Profile$Picture'])) {
 		$file = $_FILES['ANORRL$Update$Profile$Picture'];
 
-		$result = $user->SetProfilePicture($file);
+		$result = $user->setProfilePicture($file);
 		
 		if($result['error']) {
 			$_SESSION['ANORRL$Update$ProfileError'] = true;
@@ -59,8 +54,8 @@
 		}
 	}
 
-	if(isset($_POST['action']) && $_POST['action'] == 'ANORRL$Update$Profile$ResetProfilePicture') {
-		$user->ResetProfilePicture();
+	if(isset($_POST['action']) && $_POST['action'] == 'ANORRL$Update$Profile$resetProfilePicture') {
+		$user->resetProfilePicture();
 	}
 	
 	if(isset($_POST['ANORRL$Update$Settings$Submit'])) {
@@ -69,12 +64,14 @@
 		$accessibility_enabled = isset($_POST['ANORRL$Update$Settings$AccessibilityEnabled']);
 		$headshots_enabled = isset($_POST['ANORRL$Update$Settings$HeadshotsEnabled']);
 		$nightbg_enabled = isset($_POST['ANORRL$Update$Settings$NightBGEnabled']);
+		$loadingscreens_enabled = isset($_POST['ANORRL$Update$Settings$LoadingScreensEnabled']);
 
 		$settings->setRandomsEnabled($randoms_enabled);
 		$settings->setTetoEnabled($teto_enabled);
 		$settings->setAccessibilityEnabled($accessibility_enabled);
 		$settings->setHeadshotsEnabled($headshots_enabled);
 		$settings->setNightBGEnabled($nightbg_enabled);
+		$settings->setLoadingScreensEnabled($loadingscreens_enabled);
 
 		die(header("Location: /my/profile"));
 	}
@@ -85,14 +82,14 @@
 		$bgm = null;
 	}
 
-	$page = new Page("Profile");
+	$page = new Page("Profile", "my/profile");
 	$page->addStylesheet("/css/new/forms.css");
 
 	$page->loadHeader();
 ?>
 <script>
 	function RemovePicture() {
-		$.post("/my/profile", {"action": "ANORRL$Update$Profile$ResetProfilePicture"}, function() {
+		$.post("/my/profile", {"action": "ANORRL$Update$Profile$resetProfilePicture"}, function() {
 			window.location.reload();
 		})
 	}
@@ -177,6 +174,12 @@
 					<td>Night Background</td>
 					<td>
 						<input name="ANORRL$Update$Settings$NightBGEnabled" type="checkbox" <?php if($settings->nightbg_enabled): ?>checked<?php endif ?>>
+					</td>
+				</tr>
+				<tr>
+					<td>Loading Screens</td>
+					<td>
+						<input name="ANORRL$Update$Settings$LoadingScreensEnabled" type="checkbox" <?php if($settings->loadingscreens_enabled): ?>checked<?php endif ?>>
 					</td>
 				</tr>
 			</table>

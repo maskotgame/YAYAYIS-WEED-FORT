@@ -1,5 +1,5 @@
 <?php 
-    $user = SESSION ? SESSION->user : null;
+    $user = SESSION->user;
 
     if($user != null) {
         echo strval($user->id);

@@ -6,7 +6,7 @@
 	header("Pragma: no-cache");
 	header("Content-Type: application/json");
 
-	$user = SESSION ? SESSION->user : null;
+	$user = SESSION->user;
 	
 	if(isset($_GET['userId']) && isset($_GET['followerUserId'])) {
 		$user = User::FromID(intval($_GET['userId']));
@@ -16,7 +16,7 @@
 			die(json_encode(
 				[
 					"success" => true,
-					"isFollowing" => $userToCheck->IsFollowing($user)
+					"isFollowing" => $userToCheck->isFollowing($user)
 				]
 			));
 		}

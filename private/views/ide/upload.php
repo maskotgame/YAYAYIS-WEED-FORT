@@ -8,7 +8,7 @@
 	
 	$access = CONFIG->asset->key;
 	
-	$user = SESSION ? SESSION->user : null;
+	$user = SESSION->user;
 
 	function FunnyStrToBool(string $value): bool {
 		return $value == "True";
@@ -43,8 +43,8 @@
 				// Publish new item
 
 				$timer = 31;
-				if($user->GetLatestAssetUploaded() != null) {
-					$difference = (time()-($user->GetLatestAssetUploaded()->created_at->getTimestamp()-3600));
+				if($user->getLatestAssetUploaded() != null) {
+					$difference = (time()-($user->getLatestAssetUploaded()->created_at->getTimestamp()-3600));
 					$timer = $difference;
 				}
 

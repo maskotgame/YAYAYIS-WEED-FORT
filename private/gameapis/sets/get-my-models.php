@@ -1,12 +1,12 @@
 <?php
 	use anorrl\enums\AssetType;
 
-	$user = SESSION ? SESSION->user : null;
+	$user = SESSION->user;
 
 	$result = [];
 
 	if($user != null) {
-		$models = $user->GetOwnedAssets(AssetType::MODEL, $_GET['query'] ?? "", true);
+		$models = $user->getOwnedAssets(AssetType::MODEL, $_GET['query'] ?? "", true);
 		foreach($models as $model) {
 			$result[] = [
 				"AssetSetID" => 1,

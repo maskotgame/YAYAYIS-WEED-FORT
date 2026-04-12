@@ -9,7 +9,7 @@
 	use anorrl\Page;
 	use anorrl\Place;
 
-	$user = SESSION ? SESSION->user : null;
+	$user = SESSION->user;
 
 	$asset = Place::FromID($id);
 	$domain = CONFIG->domain;
@@ -91,7 +91,6 @@
 
 	if($user == null) {
 		die();
-		//die(header("Location: /login"));
 	}
 
 ?>

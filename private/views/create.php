@@ -8,7 +8,7 @@
 		$type = trim(strtolower($type));
 	}
 
-	$user = SESSION ? SESSION->user : null;
+	$user = SESSION->user;
 
 	$validtypes = [
 		"faces",
@@ -87,17 +87,13 @@
 		}
 	}
 
-	$page = new Page("Create");
+	$page = new Page("Create", "my/create");
 
 	$page->addStylesheet("/css/new/create.css");
 	$page->addStylesheet("/css/new/stuff.css?v=1");
 
 	$page->addScript("/js/create.js?t=1771701183");
 	$page->loadHeader();
-
-	if($user == null) {
-		die(header("Location: /login"));
-	}
 ?>
 <div class="Asset" template>
 	<a id="NameAndThumbs">

@@ -468,7 +468,7 @@
 					$stmt -> bind_param("i", $id);
 					$stmt->execute();
 
-					$stmt = $con->prepare('DELETE FROM `visit` WHERE `visit_place` = ?');
+					$stmt = $con->prepare('DELETE FROM `visits` WHERE `place` = ?');
 					$stmt -> bind_param("i", $id);
 					$stmt->execute();
 

@@ -26,7 +26,7 @@
 		public static function GenerateID() {
 			include $_SERVER["DOCUMENT_ROOT"]."/private/connection.php";
 			$id = self::GetRandomString(); //id
-			$stmt = $con->prepare('SELECT * FROM `statuses` WHERE `status_id` = ?');
+			$stmt = $con->prepare('SELECT * FROM `statuses` WHERE `id` = ?');
 			$stmt->bind_param('s', $id);
 			$stmt->execute();
 			$stmt->store_result();
@@ -44,7 +44,7 @@
 			$user = User::FromID($userid);
 
 			if($user != null && !$user->isBanned()) {
-				$latest_status = $user->GetLatestStatus();
+				$latest_status = $user->getLatestStatus();
 				if($latest_status != null) {
 					// check if user hasn't posted one in 30s
 
@@ -73,7 +73,7 @@
 				}
 
 				include $_SERVER["DOCUMENT_ROOT"]."/private/connection.php";
-				$stmt = $con->prepare('INSERT INTO `statuses`(`status_id`, `status_poster`, `status_content`) VALUES (?, ?, ?)');
+				$stmt = $con->prepare('INSERT INTO `statuses`(`id`, `poster`, `content`) VALUES (?, ?, ?)');
 				$stmt -> bind_param('sis',  $status_id, $user->id, $status_content);
 				$stmt -> execute();
 
@@ -86,7 +86,7 @@
 		public static function GetLatestFeedsPaged(int $pagenum, int $count): array {
 
 			include $_SERVER["DOCUMENT_ROOT"]."/private/connection.php";
-			$stmt_getallusers = $con->prepare("SELECT * FROM `statuses` ORDER BY `status_posted` DESC LIMIT ?, ?");
+			$stmt_getallusers = $con->prepare("SELECT * FROM `statuses` ORDER BY `posted` DESC LIMIT ?, ?");
 			$page = (($pagenum-1)*$count);
 			$stmt_getallusers->bind_param('ii', $page, $count);
 			$stmt_getallusers->execute();
@@ -111,10 +111,10 @@
 		}
 
 		function __construct($rowdata) {
-			$this->id = ($rowdata['status_id']);
-			$this->poster = User::FromID(intval($rowdata['status_poster']));
-			$this->content = str_replace("<", "&lt;", str_replace(">", "&gt;", $rowdata['status_content']));
-			$this->time_posted = \DateTime::createFromFormat("Y-m-d H:i:s", $rowdata['status_posted']);
+			$this->id = ($rowdata['id']);
+			$this->poster = User::FromID(intval($rowdata['poster']));
+			$this->content = str_replace("<", "&lt;", str_replace(">", "&gt;", $rowdata['content']));
+			$this->time_posted = \DateTime::createFromFormat("Y-m-d H:i:s", $rowdata['posted']);
 		}
 
 	}

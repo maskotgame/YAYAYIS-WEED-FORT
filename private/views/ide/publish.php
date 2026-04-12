@@ -32,7 +32,7 @@
 										<span>Create a New Place</span>
 									</div>
 									<?php 
-										$places = $user->GetOwnedAssets(AssetType::PLACE);
+										$places = $user->getOwnedAssets(AssetType::PLACE);
 										
 										if(count($places) != 0) {
 											foreach($places as $place) {

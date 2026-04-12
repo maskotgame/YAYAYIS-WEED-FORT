@@ -1,5 +1,5 @@
 <?php
-    $user = SESSION ? SESSION->user : null;
+    $user = SESSION->user;
 	$domain = CONFIG->domain;
 	
     if($user != null) {

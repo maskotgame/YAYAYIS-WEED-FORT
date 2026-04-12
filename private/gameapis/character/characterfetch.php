@@ -22,5 +22,5 @@ if($user == null) {
     $userId = 1;
 }
 
-die($user->GetCharacterAppearance());
+die($user->getCharacterAppearance());
 endif ?>

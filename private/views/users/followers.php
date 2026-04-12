@@ -21,15 +21,11 @@
 		die(header("Location: /my/home"));
 	}
 
-	if(!SESSION) {
-		die(header("Location: /login"));
-	}
-
 	$user = SESSION->user;
 
 	$header_data = $get_user;
 
-	$followers = $get_user->GetFollowers();
+	$followers = $get_user->getFollowers();
 
 	$page = new Page("{$get_user->name}'s Followers");
 	$page->addStylesheet("/css/new/my/friends.css?v=1");
@@ -57,7 +53,7 @@
 				$profile = "headshot";
 			}
 
-			$status = $friendo->IsOnline() ? "Online" : "Offline";
+			$status = $friendo->isOnline() ? "Online" : "Offline";
 			
 			$fname = $friendo->name;
 			echo <<<EOT

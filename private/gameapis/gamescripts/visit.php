@@ -132,7 +132,7 @@ end
 	}    
 	header("Content-Type: text/plain");
 
-	$user = SESSION ? SESSION->user : null;
+	$user = SESSION->user;
 	$username = "Player";
 	$userid = 1;
 	$userage = 0;

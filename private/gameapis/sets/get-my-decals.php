@@ -1,12 +1,12 @@
 <?php
 	use anorrl\enums\AssetType;
 
-	$user = SESSION ? SESSION->user : null;
+	$user = SESSION->user;
 
 	$result = [];
 
 	if($user != null) {
-		$decals = $user->GetOwnedAssets(AssetType::DECAL, $_GET['query'] ?? "", true);
+		$decals = $user->getOwnedAssets(AssetType::DECAL, $_GET['query'] ?? "", true);
 		foreach($decals as $decal) {
 			$result[] = [
 				"AssetSetID" => 1,

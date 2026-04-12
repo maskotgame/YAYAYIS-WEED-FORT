@@ -11,12 +11,17 @@
 		private array $metas = [];
 
 		private string $title;
+		private string $internal_name;
 		private int $lucky_number;
 		private bool $bad_apple = false;
 		private UserSettings $settings;
 
-		function __construct(string $title) {
+		function __construct(string $title, string|null $internal_name = null) {
 			$this->title = $title;
+			if(!$internal_name)
+				$this->internal_name = $title;
+			else
+				$this->internal_name = $internal_name;
 
 			$this->lucky_number = rand(0, 100000);
 			$this->bad_apple = $this->lucky_number > 6500 && $this->lucky_number < 6515;

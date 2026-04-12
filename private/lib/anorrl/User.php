@@ -38,7 +38,7 @@
 		 */
 		public static function FromID(int $id) {
 			include $_SERVER["DOCUMENT_ROOT"]."/private/connection.php";
-			$stmt_getuser = $con->prepare("SELECT * FROM `users` WHERE `user_id` = ?");
+			$stmt_getuser = $con->prepare("SELECT * FROM `users` WHERE `id` = ?");
 			$stmt_getuser->bind_param('i', $id);
 			$stmt_getuser->execute();
 			$result = $stmt_getuser->get_result();
@@ -58,7 +58,7 @@
 		 */
 		public static function FromName(string $name) {
 			include $_SERVER["DOCUMENT_ROOT"]."/private/connection.php";
-			$stmt_getuser = $con->prepare("SELECT * FROM `users` WHERE `user_name` LIKE ?");
+			$stmt_getuser = $con->prepare("SELECT * FROM `users` WHERE `name` LIKE ?");
 			$stmt_getuser->bind_param('s', $name);
 			$stmt_getuser->execute();
 			$result = $stmt_getuser->get_result();
@@ -78,7 +78,7 @@
 		 */
 		public static function FromSecurityKey(string $security) {
 			include $_SERVER["DOCUMENT_ROOT"]."/private/connection.php";
-			$stmt_getuser = $con->prepare("SELECT * FROM `users` WHERE `user_security` = ?");
+			$stmt_getuser = $con->prepare("SELECT * FROM `users` WHERE `security` = ?");
 			$stmt_getuser->bind_param('s', $security);
 			$stmt_getuser->execute();
 			$result = $stmt_getuser->get_result();
@@ -100,18 +100,18 @@
 		}
 
 		function __construct($rowdata) {
-			$this->id = intval($rowdata['user_id']);
-			$this->name = strval($rowdata['user_name']);
-			$this->blurb = str_replace("<", "&lt;", str_replace(">", "&gt;", $rowdata['user_blurb']));
-			$this->last_update = \DateTime::createFromFormat("Y-m-d H:i:s", $rowdata['user_lastprofileupdate']);
-			$this->setprofilepicture = boolval($rowdata['user_setprofilepicture']);
-			$this->currentoutfitmd5 = strval($rowdata['user_currentappearancemd5']);
-			$this->join_date = \DateTime::createFromFormat("Y-m-d H:i:s", $rowdata['user_joindate']);
-			$this->password = strval($rowdata['user_password']);
-			$this->security_key = strval($rowdata['user_security']);
+			$this->id = intval($rowdata['id']);
+			$this->name = strval($rowdata['name']);
+			$this->blurb = str_replace("<", "&lt;", str_replace(">", "&gt;", $rowdata['blurb']));
+			$this->last_update = \DateTime::createFromFormat("Y-m-d H:i:s", $rowdata['lastprofileupdate']);
+			$this->setprofilepicture = boolval($rowdata['setprofilepicture']);
+			$this->currentoutfitmd5 = strval($rowdata['currentappearancemd5']);
+			$this->join_date = \DateTime::createFromFormat("Y-m-d H:i:s", $rowdata['joindate']);
+			$this->password = strval($rowdata['password']);
+			$this->security_key = strval($rowdata['security']);
 		}
 
-		function GetFriends(): array {
+		function getFriends(): array {
 			$fetch = Database::singleton()->run(
 				"SELECT * FROM `friends` WHERE (`sender` LIKE :id OR `reciever` LIKE :id) AND `status` = 1;",
 				[ ":id" => $this->id ]
@@ -126,7 +126,7 @@
 			return $friends;
 		}
 		
-		function GetFollowers(): array {
+		function getFollowers(): array {
 			$fetch = Database::singleton()->run(
 				"SELECT * FROM `follows` WHERE `followed` = :id",
 				[ ":id" => $this->id ]
@@ -141,7 +141,7 @@
 			return $followers;
 		}
 		
-		function GetFollowing(): array {
+		function getFollowing(): array {
 			$fetch = Database::singleton()->run(
 				"SELECT * FROM `follows` WHERE `follower` = :id",
 				[ ":id" => $this->id ]
@@ -156,56 +156,58 @@
 			return $following;
 		}
 
-		function GetPendingFriendRequests(): array {
-			include $_SERVER['DOCUMENT_ROOT'] . "/private/connection.php";
+		function getPendingFriendRequests(): array {
+			$db = Database::singleton();
 
-			$stmt_getfriendreqs = $con->prepare("SELECT * FROM `friends` WHERE `reciever` = ? AND `status` = 0;");
-			$stmt_getfriendreqs->bind_param("i", $this->id);
-			$stmt_getfriendreqs->execute();
+			$get_friend_reqs = $db->run(
+				"SELECT * FROM `friends` WHERE `reciever` = :id AND `status` = 0;",
+				[":id" => $this->id]
+			)->fetchAll(\PDO::FETCH_OBJ);
 
-			$result_getfriendreqs = $stmt_getfriendreqs->get_result();
 			
 			$result = [];
 
-			if($result_getfriendreqs->num_rows != 0) {
-				while($row = $result_getfriendreqs->fetch_assoc()) {
-					$user = User::FromID($row['sender']);
+			foreach($get_friend_reqs as $row) {
+				$user = User::FromID($row->sender);
 
-					if($user != null) {
-						$result[] = $user;
-					} else {
-						$stmt_deletefriendreq = $con->prepare("DELETE FROM `friends` WHERE `sender` = ? AND `reciever` = ? AND `status` = 0;");
-						$stmt_deletefriendreq->bind_param("ii", $row['sender'], $this->id);
-						$stmt_deletefriendreq->execute();
-					}
+				if($user) {
+					$result[] = $user;
+				} else {
+					$db->run(
+						"DELETE FROM `friends` WHERE `sender` = :sender AND `reciever` = :id AND `status` = 0;",
+						[
+							":sender" => $row['sender'], 
+							":id" => $this->id
+						]
+					);
 				}
 			}
 
 			return $result;
 		}
 
-		function GetPendingFriendRequestsCount() {
-			return count($this->GetPendingFriendRequests());
+		function getPendingFriendRequestsCount() {
+			return count($this->getPendingFriendRequests());
 		}
 
-		function GetFriendsCount(): int {
-			return count($this->GetFriends());
+		function getFriendsCount(): int {
+			return count($this->getFriends());
 		}
 		
-		function GetFollowersCount(): int {
-			return count($this->GetFollowers());
+		function getFollowersCount(): int {
+			return count($this->getFollowers());
 		}
 
-		function GetFollowingCount(): int {
-			return count($this->GetFollowing());
+		function getFollowingCount(): int {
+			return count($this->getFollowing());
 		}
 
 		/**
 		 * Returns paged list of the user's created games
 		 * @return void
 		 */
-		function GetPlaces(bool $teamcreate = false): array {
-			$grabbedplaces = $this->GetOwnedAssets(AssetType::PLACE, "", true);
+		function getPlaces(bool $teamcreate = false): array {
+			$grabbedplaces = $this->getOwnedAssets(AssetType::PLACE, "", true);
 			$result = [];
 
 			$teamcreatedplaces = [];
@@ -242,15 +244,15 @@
 			return array_merge($result, $teamcreatedplaces);
 		}
 
-		function GiveProfileBadge(ANORRLBadge $badge): void {
+		function giveProfileBadge(ANORRLBadge $badge): void {
 			include $_SERVER["DOCUMENT_ROOT"]."/private/connection.php";
-			$stmt = $con->prepare("SELECT * FROM `profilebadges` WHERE `badge_id` = ? AND `badge_userid` = ?");
+			$stmt = $con->prepare("SELECT * FROM `profilebadges` WHERE `badgeid` = ? AND `userid` = ?");
 			$ordinal = $badge->ordinal();
 			$stmt->bind_param('ii', $ordinal, $this->id);
 			$stmt->execute();
 
 			if($stmt->get_result()->num_rows == 0) {
-				$stmt = $con->prepare("INSERT INTO `profilebadges`(`badge_id`, `badge_userid`) VALUES (?, ?)");
+				$stmt = $con->prepare("INSERT INTO `profilebadges`(`badgeid`, `userid`) VALUES (?, ?)");
 				$ordinal = $badge->ordinal();
 				$admin_badge = $badge == ANORRLBadge::ADMINISTRATOR ? 1 : 0;
 				$stmt->bind_param('iii`', $ordinal, $this->id, $admin_badge);
@@ -258,9 +260,9 @@
 			}
 		}
 
-		function HasProfileBadgeOf(ANORRLBadge $badge): bool {
+		function hasProfileBadgeOf(ANORRLBadge $badge): bool {
 			include $_SERVER["DOCUMENT_ROOT"]."/private/connection.php";
-			$stmt = $con->prepare("SELECT * FROM `profilebadges` WHERE `badge_id` = ? AND `badge_userid` = ?");
+			$stmt = $con->prepare("SELECT * FROM `profilebadges` WHERE `badgeid` = ? AND `userid` = ?");
 			$ordinal = $badge->ordinal();
 			$stmt->bind_param('ii', $ordinal, $this->id);
 			$stmt->execute();
@@ -272,9 +274,9 @@
 		 * Returns the system badges (Homestead and the alike)
 		 * @return void
 		 */
-		function GetProfileBadges(): array {
+		function getProfileBadges(): array {
 			include $_SERVER["DOCUMENT_ROOT"]."/private/connection.php";
-			$stmt = $con->prepare("SELECT * FROM `profilebadges` WHERE `badge_userid` = ? ORDER BY `badge_recieved` DESC, `badge_id` DESC");
+			$stmt = $con->prepare("SELECT * FROM `profilebadges` WHERE `userid` = ? ORDER BY `recieved_at` DESC, `badgeid` DESC");
 			$stmt->bind_param('i',$this->id);
 			$stmt->execute();
 
@@ -283,7 +285,7 @@
 			$badges = [];
 
 			while($row = $result->fetch_assoc()) {
-				$badges[] = ANORRLBadge::index($row['badge_id']);
+				$badges[] = ANORRLBadge::index($row['badgeid']);
 			}
 
 			return $badges;
@@ -291,15 +293,15 @@
 
 		/**
 		 * Returns badges created by the users (from games)
-		 * @return void
+		 * @return array
 		 */
-		function GetUserBadges(): array {
-			return [];
+		function getUserBadges(): array {
+			return $this->getOwnedAssets(AssetType::BADGE);
 		}
 
-		function GetLatestStatus(): Status|null {
+		function getLatestStatus(): Status|null {
 			include $_SERVER["DOCUMENT_ROOT"]."/private/connection.php";
-			$stmt = $con->prepare("SELECT * FROM `statuses` WHERE `status_poster` = ? ORDER BY `status_posted` DESC");
+			$stmt = $con->prepare("SELECT * FROM `statuses` WHERE `poster` = ? ORDER BY `posted` DESC");
 			$stmt->bind_param('i', $this->id);
 			$stmt->execute();
 			$result = $stmt->get_result();
@@ -324,7 +326,7 @@
 		 * @param int $count
 		 * @return void
 		 */
-		function GetOwnedAssets(AssetType $type, string $query = "", bool $creator_only = false, bool $show_all = true, array $excludedids = [], int $page = -1, int $count = -1): array {
+		function getOwnedAssets(AssetType $type, string $query = "", bool $creator_only = false, bool $show_all = true, array $excludedids = [], int $page = -1, int $count = -1): array {
 			include $_SERVER["DOCUMENT_ROOT"]."/private/connection.php";
 		
 			$sql_assettype = $type->ordinal();
@@ -410,7 +412,7 @@
 		 * @param array $excludedids
 		 * @return void
 		 */
-		function GetOwnedAssetsCount(AssetType $type, string $query = "", bool $creator_only = false, bool $show_all = true, array $excludedids = []): int {
+		function getOwnedAssetsCount(AssetType $type, string $query = "", bool $creator_only = false, bool $show_all = true, array $excludedids = []): int {
 			include $_SERVER["DOCUMENT_ROOT"]."/private/connection.php";
 		
 			$sql_assettype = $type->ordinal();
@@ -461,7 +463,7 @@
 			return $row['COUNT(`asset_id`)'];
 		}
 
-		function GetAllOwnedAssets(): array {
+		function getAllOwnedAssets(): array {
 			include $_SERVER["DOCUMENT_ROOT"]."/private/connection.php";
 			$stmt_getuser = $con->prepare("SELECT * FROM `transactions` WHERE `userid` = ? ORDER BY `date` DESC");
 			$stmt_getuser->bind_param('i', $this->id);
@@ -481,7 +483,7 @@
 			return [];
 		}
 
-		function GetLatestAssetUploaded() {
+		function getLatestAssetUploaded(): Asset|null {
 			include $_SERVER["DOCUMENT_ROOT"]."/private/connection.php";
 			$stmt_getuser = $con->prepare("SELECT * FROM `assets` WHERE `asset_creator` = ? ORDER BY `asset_id` DESC");
 			$stmt_getuser->bind_param('i', $this->id);
@@ -499,7 +501,7 @@
 			}
 		}
 
-		function IsWearing(Asset|int $asset): bool {
+		function isWearing(Asset|int $asset): bool {
 			$assetid = $asset;
 			if($asset instanceof Asset) {
 				$assetid = $asset->id;
@@ -536,7 +538,7 @@
 			return $numberrows != 0;
 		}
 
-		function Wear(Asset|int $asset): array {
+		function wear(Asset|int $asset): array {
 
 			$theabsolutelimit = 5;
 
@@ -551,7 +553,7 @@
 
 			include $_SERVER["DOCUMENT_ROOT"]."/private/connection.php";
 
-			if($this->IsWearing($asset)) {
+			if($this->isWearing($asset)) {
 				return ["error" => false];
 			} else {
 				$item = Asset::FromID($assetid);
@@ -598,7 +600,7 @@
 			return ["error" => false];
 		}
 
-		function Unwear(Asset|int $asset): array {
+		function takeOff(Asset|int $asset): array {
 			$assetid = $asset;
 			if($asset instanceof Asset) {
 				$assetid = $asset->id;
@@ -610,7 +612,7 @@
 
 			include $_SERVER["DOCUMENT_ROOT"]."/private/connection.php";
 
-			if(!$this->IsWearing($asset)) {
+			if(!$this->isWearing($asset)) {
 				return ["error" => false];
 			} else {
 				$item = Asset::FromID($assetid);
@@ -634,8 +636,8 @@
 			return ["error" => false];
 		}
 
-		function GetBodyColoursXML() {
-			$colours = $this->GetBodyColours();
+		function getBodyColoursXML() {
+			$colours = $this->getBodyColours();
 			$headcolour = $colours['head'];
 			$rightarmcolour = $colours['rightarm'];
 			$leftlegcolour = $colours['leftleg'];
@@ -663,9 +665,9 @@
 			EOT;
 		}
 
-		function GetCharacterAppearance(): string {
+		function getCharacterAppearance(): string {
 			$domain = \CONFIG->domain;
-			$getwearing = $this->GetWearingArray();
+			$getwearing = $this->getWearingArray();
 
 			$userId = $this->id;
 			$parsedshit= "";
@@ -681,10 +683,10 @@
 			return "http://$domain/Asset/BodyColors.ashx?userId=$userId&t=$time$parsedshit";
 		}
 
-		function GetCharacterAppearanceVerbose(): string {
+		function getCharacterAppearanceVerbose(): string {
 			$domain = \CONFIG->domain;
-			$bodycoloursxml = $this->GetBodyColoursXML();
-			$getwearing = $this->GetWearingArray(true);
+			$bodycoloursxml = $this->getBodyColoursXML();
+			$getwearing = $this->getWearingArray(true);
 
 			$userId = $this->id;
 			$parsedshit= "";
@@ -725,20 +727,20 @@
 			return "$bodycoloursxml_encoded;$parsedshit";
 		}
 
-		function GetCharacterAppearanceHash() {
-			return md5($this->GetCharacterAppearanceVerbose());
+		function getCharacterAppearanceHash() {
+			return md5($this->getCharacterAppearanceVerbose());
 		}
 
-		function UpdateOutfitHash() {
+		function updateOutfitHash() {
 			include $_SERVER['DOCUMENT_ROOT']."/private/connection.php";
-			$md5 = $this->GetCharacterAppearanceHash();
+			$md5 = $this->getCharacterAppearanceHash();
 
-			$stmt = $con->prepare("UPDATE `users` SET `user_currentappearancemd5` = ? WHERE `user_id` = ?");
+			$stmt = $con->prepare("UPDATE `users` SET `currentappearancemd5` = ? WHERE `id` = ?");
 			$stmt->bind_param("si", $md5, $this->id);
 			$stmt->execute();
 		}
 
-		function GetWearingArray(bool $ordered = false) {
+		function getWearingArray(bool $ordered = false) {
 			include $_SERVER["DOCUMENT_ROOT"]."/private/connection.php";
 
 			if($ordered) {
@@ -772,7 +774,7 @@
 			return $ids;
 		}
 
-		function GetBodyColours() {
+		function getBodyColours() {
 			include $_SERVER["DOCUMENT_ROOT"]."/private/connection.php";
 
 			$stmt_grabcolours = $con->prepare("SELECT * FROM `bodycolours` WHERE `colours_userid` = ?;");
@@ -785,7 +787,7 @@
 				$stmt_createcolours->bind_param('i', $this->id);
 				$stmt_createcolours->execute();
 
-				return $this->GetBodyColours();
+				return $this->getBodyColours();
 			}
 			$colours = $grabcolours_result->fetch_assoc();
 
@@ -799,8 +801,8 @@
 			];
 		}
 
-		function SetBodyColours(int $head, int $torso, int $leftarm, int $rightarm, int $leftleg, int $rightleg) {
-			$this->GetBodyColours(); // populate if doesn't exist
+		function setBodyColours(int $head, int $torso, int $leftarm, int $rightarm, int $leftleg, int $rightleg) {
+			$this->getBodyColours(); // populate if doesn't exist
 
 			include $_SERVER["DOCUMENT_ROOT"]."/private/connection.php";
 
@@ -809,33 +811,33 @@
 			$stmt_createcolours->execute();
 		}
 		
-		function Follow(User|int $user) {
+		function follow(User|int $user) {
 			include $_SERVER["DOCUMENT_ROOT"]."/private/connection.php";
 			$userid = $user;
 			if($user instanceof User) {
 				$userid = $user->id;
 			}
-			if(!$this->IsFollowing($user)) {
+			if(!$this->isFollowing($user)) {
 				$stmt_getuser = $con->prepare("INSERT INTO `follows`(`follower`, `followed`) VALUES (?, ?);");
 				$stmt_getuser->bind_param('ii', $this->id, $userid);
 				$stmt_getuser->execute();
 			}
 		}
 
-		function Unfollow(User|int $user) {
+		function unfollow(User|int $user) {
 			include $_SERVER["DOCUMENT_ROOT"]."/private/connection.php";
 			$userid = $user;
 			if($user instanceof User) {
 				$userid = $user->id;
 			}
-			if($this->IsFollowing($user)) {
+			if($this->isFollowing($user)) {
 				$stmt_getuser = $con->prepare("DELETE FROM `follows` WHERE `follower` = ? AND `followed` = ?;");
 				$stmt_getuser->bind_param('ii', $this->id, $userid);
 				$stmt_getuser->execute();
 			}
 		}
 
-		function IsFollowing(User|int $user): bool {
+		function isFollowing(User|int $user): bool {
 			include $_SERVER["DOCUMENT_ROOT"]."/private/connection.php";
 			$userid = $user;
 			if($user instanceof User) {
@@ -850,34 +852,34 @@
 			return $result->num_rows != 0;
 		}
 
-		function Friend(User|int $user) {
+		function friend(User|int $user) {
 			include $_SERVER["DOCUMENT_ROOT"]."/private/connection.php";
 			$userid = $user;
 			if($user instanceof User) {
 				$userid = $user->id;
 			}
 
-			if(!$this->IsFriendsWith($user) && !$this->IsPendingFriendsReq($user) && !$this->IsIncomingFriendsReq($user)) {
+			if(!$this->isFriendsWith($user) && !$this->isPendingFriendsReq($user) && !$this->isIncomingFriendsReq($user)) {
 				$stmt_addfriend = $con->prepare("INSERT INTO `friends`(`sender`, `reciever`) VALUES (?,?)");
 				$stmt_addfriend->bind_param('ii', $this->id, $userid);
 				$stmt_addfriend->execute();
-			} else if($this->IsIncomingFriendsReq($user)) {
+			} else if($this->isIncomingFriendsReq($user)) {
 				$stmt_addfriend = $con->prepare("UPDATE `friends` SET `status`= 1 WHERE `reciever` = ? AND `sender` = ?;");
 				$stmt_addfriend->bind_param('ii', $this->id, $userid);
 				$stmt_addfriend->execute();
 			} else {
-				$this->Unfriend($user);
+				$this->unfriend($user);
 			}
 		}
 
-		function Unfriend(User|int $user) {
+		function unfriend(User|int $user) {
 			include $_SERVER["DOCUMENT_ROOT"]."/private/connection.php";
 			$userid = $user;
 			if($user instanceof User) {
 				$userid = $user->id;
 			}
 
-			if($this->IsPendingFriendsReq($user) || $this->IsIncomingFriendsReq($user) || $this->IsFriendsWith($user)) {
+			if($this->isPendingFriendsReq($user) || $this->isIncomingFriendsReq($user) || $this->isFriendsWith($user)) {
 				$stmt_getuser = $con->prepare("DELETE FROM `friends` WHERE (`reciever` = ? AND `sender` = ?)");
 				$stmt_getuser->bind_param('ii', $this->id, $userid);
 				$stmt_getuser->execute();
@@ -888,7 +890,7 @@
 			}
 		}
 
-		function IsPendingFriendsReq(User|int $user) {
+		function isPendingFriendsReq(User|int $user) {
 			include $_SERVER["DOCUMENT_ROOT"]."/private/connection.php";
 			$userid = $user;
 			if($user instanceof User) {
@@ -903,7 +905,7 @@
 			return $result->num_rows != 0;
 		}
 
-		function IsIncomingFriendsReq(User|int $user) {
+		function isIncomingFriendsReq(User|int $user) {
 			include $_SERVER["DOCUMENT_ROOT"]."/private/connection.php";
 			$userid = $user;
 			if($user instanceof User) {
@@ -918,7 +920,7 @@
 			return $result->num_rows != 0;
 		}
 
-		function IsFriendsWith(User|int $user): bool {
+		function isFriendsWith(User|int $user): bool {
 			include $_SERVER["DOCUMENT_ROOT"]."/private/connection.php";
 			$userid = $user;
 			if($user instanceof User) {
@@ -933,17 +935,14 @@
 			return $result->num_rows != 0;
 		}
 
-		function UpdateBio(string $bio): array {
+		function updateBio(string $bio): array {
 			if(!$this->isBanned()) {
 				// check if user hasn't posted one in 30s
 
-				//$offset = 3600; // windows blehh
 				$offset = -3600; //prod
 
-
+				// lord save me what the fuck is this
 				$difference = (time()-($this->last_update->getTimestamp()+$this->last_update->getOffset()+$offset));
-
-				//die(strval($difference));
 
 				$calculated_time = 30 - $difference; 
 
@@ -958,7 +957,7 @@
 				}
 
 				include $_SERVER["DOCUMENT_ROOT"]."/private/connection.php";
-				$stmt = $con->prepare('UPDATE `users` SET `user_blurb` = ?, `user_lastprofileupdate` = now() WHERE `user_id` = ?;');
+				$stmt = $con->prepare('UPDATE `users` SET `blurb` = ?, `lastprofileupdate` = now() WHERE `id` = ?;');
 				$stmt -> bind_param('si',  $bio_content, $this->id);
 				$stmt -> execute();
 
@@ -982,14 +981,14 @@
 		}
 
 		function isAdmin(): bool {
-			return $this->HasProfileBadgeOf(ANORRLBadge::ADMINISTRATOR);
+			return $this->hasProfileBadgeOf(ANORRLBadge::ADMINISTRATOR);
 		}
 
 		function isBanned(): bool {
 			return false;
 		}
 
-		function IsOnline(): bool {
+		function isOnline(): bool {
 			include $_SERVER["DOCUMENT_ROOT"]."/private/connection.php";
 			
 			$stmt_user_status_check = $con->prepare('SELECT * FROM `activity` WHERE `userid` = ? AND `action_time` > DATE_SUB(NOW(),INTERVAL 5 MINUTE)');
@@ -1007,7 +1006,7 @@
 				
 			$stmt_result = $result ? 1 : 0;
 	
-			$stmt_user_status_check = $con->prepare('UPDATE `users` SET `user_online` = ? WHERE `user_id` = ?');
+			$stmt_user_status_check = $con->prepare('UPDATE `users` SET `online` = ? WHERE `id` = ?');
 			$stmt_user_status_check->bind_param('ii', $stmt_result, $this->id);
 			$stmt_user_status_check->execute();
 			return $result;
@@ -1045,7 +1044,7 @@
 			return null;
 		}
 
-		function GetOnlineActivity(): string {
+		function getOnlineActivity(): string {
 			include $_SERVER["DOCUMENT_ROOT"]."/private/connection.php";
 			
 			$userGameDetails = $this->getUserGameDetails();
@@ -1103,7 +1102,7 @@
 			}
 		}
 
-		function SetProfilePicture(array $file): array {
+		function setProfilePicture(array $file): array {
 			if($file['error'] == 0 && $file['size'] > 0 && $file['size'] <= 524288) { // 512kb cap
 				$file_contents = file_get_contents($file['tmp_name']);
 				$file_type = ImageUtils::checkMimeType($file_contents);
@@ -1134,7 +1133,7 @@
 							if(!$this->setprofilepicture) {
 								include $_SERVER['DOCUMENT_ROOT']."/private/connection.php";
 
-								$stmt_updateuser = $con->prepare("UPDATE `users` SET `user_setprofilepicture` = 1 WHERE `user_id` = ?;");
+								$stmt_updateuser = $con->prepare("UPDATE `users` SET `setprofilepicture` = 1 WHERE `id` = ?;");
 								$stmt_updateuser->bind_param("i", $this->id);
 								$stmt_updateuser->execute();
 							}
@@ -1153,7 +1152,7 @@
 							if(!$this->setprofilepicture) {
 								include $_SERVER['DOCUMENT_ROOT']."/private/connection.php";
 
-								$stmt_updateuser = $con->prepare("UPDATE `users` SET `user_setprofilepicture` = 1 WHERE `user_id` = ?;");
+								$stmt_updateuser = $con->prepare("UPDATE `users` SET `setprofilepicture` = 1 WHERE `id` = ?;");
 								$stmt_updateuser->bind_param("i", $this->id);
 								$stmt_updateuser->execute();
 							}
@@ -1182,7 +1181,7 @@
 			
 		}
 
-		function ResetProfilePicture() {
+		function resetProfilePicture() {
 			if($this->setprofilepicture) {
 				if(file_exists($_SERVER['DOCUMENT_ROOT']."/../users/profile_{$this->id}.png")) {
 					unlink($_SERVER['DOCUMENT_ROOT']."/../users/profile_{$this->id}.png");
@@ -1190,7 +1189,7 @@
 
 				include $_SERVER['DOCUMENT_ROOT']."/private/connection.php";
 
-				$stmt_updateuser = $con->prepare("UPDATE `users` SET `user_setprofilepicture` = 0 WHERE `user_id` = ?;");
+				$stmt_updateuser = $con->prepare("UPDATE `users` SET `setprofilepicture` = 0 WHERE `id` = ?;");
 				$stmt_updateuser->bind_param("i", $this->id);
 				$stmt_updateuser->execute();
 			}

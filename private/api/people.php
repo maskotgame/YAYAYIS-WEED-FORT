@@ -46,8 +46,8 @@
 					"id" => $user->id,
 					"name" => $user->name,
 					"blurb" => htmlspecialchars($user->blurb, ENT_QUOTES),
-					"online" => $user->IsOnline(),
-					"status" => $user->GetOnlineActivity(),
+					"online" => $user->isOnline(),
+					"status" => $user->getOnlineActivity(),
 					"thumbnail" => "/thumbs/$profile?id=".$user->id."&sxy=64"
 				];
 			}

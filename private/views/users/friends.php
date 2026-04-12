@@ -27,15 +27,11 @@
 		}
 	}
 	
-	$user = SESSION ? SESSION->user : null;
-
-	if($user == null) {
-		die(header("Location: /login"));
-	}
+	$user = SESSION->user;
 
 	$header_data = $get_user;
 
-	$friends = $get_user->GetFriends();
+	$friends = $get_user->getFriends();
 
 	$page = new Page("{$get_user->name}'s Friends");
 	$page->addStylesheet("/css/new/my/friends.css?v=1");
@@ -63,7 +59,7 @@
 				$profile = "headshot";
 			}
 
-			$status = $friendo->IsOnline() ? "Online" : "Offline";
+			$status = $friendo->isOnline() ? "Online" : "Offline";
 			
 			$fname = $friendo->name;
 			echo <<<EOT

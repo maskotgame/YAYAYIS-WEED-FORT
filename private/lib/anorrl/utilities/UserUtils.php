@@ -70,7 +70,7 @@
 
 			include $_SERVER['DOCUMENT_ROOT'].'/private/connection.php';
 
-			$stmt_insertuser = $con->prepare("INSERT INTO `users`(`user_name`, `user_blurb`, `user_discord`, `user_password`, `user_security`) VALUES (?,'',?,?,?);");
+			$stmt_insertuser = $con->prepare("INSERT INTO `users`(`name`, `blurb`, `discord`, `password`, `security`) VALUES (?,'',?,?,?);");
 			$stmt_insertuser->bind_param('ssss', $username, $discordid, $hashedpass, $securitykey);
 			if($stmt_insertuser->execute()) {
 				self::SetCookies($securitykey);
@@ -112,7 +112,7 @@
 			}
 
 			// login user
-			$stmt_grabuser = $con->prepare('SELECT * FROM `users` WHERE `user_name` = ?;');
+			$stmt_grabuser = $con->prepare('SELECT * FROM `users` WHERE `name` = ?;');
 			$stmt_grabuser->bind_param('s', $username);
 			$stmt_grabuser->execute();
 			$result_grabuser = $stmt_grabuser->get_result();
@@ -120,14 +120,14 @@
 			if($result_grabuser->num_rows == 1) {
 				$user_row = $result_grabuser->fetch_assoc();
 
-				if(password_verify($pass_password, $user_row['user_password'])) {
-					self::SetCookies($user_row['user_security']);
+				if(password_verify($pass_password, $user_row['password'])) {
+					self::SetCookies($user_row['security']);
 					if(session_status() != PHP_SESSION_ACTIVE) {
 						session_start();
 					}
 
-					$_SESSION['SESSION_TOKEN_YAA'] = $user_row['user_security'];
-					return  ['login' => $user_row['user_security']];
+					$_SESSION['SESSION_TOKEN_YAA'] = $user_row['security'];
+					return  ['login' => $user_row['security']];
 				}
 			}
 
@@ -176,7 +176,7 @@
 		 */
 		public static function IsUsernameAvailable(string $username): bool {
 			include $_SERVER['DOCUMENT_ROOT'].'/private/connection.php';
-			$stmt_checkusername = $con->prepare('SELECT `user_name` FROM `users` WHERE `user_name` LIKE ?;');
+			$stmt_checkusername = $con->prepare('SELECT `name` FROM `users` WHERE `name` LIKE ?;');
 			$stmt_checkusername->bind_param('s', $username);
 			$stmt_checkusername->execute();
 			$result_checkusername = $stmt_checkusername->get_result();
@@ -197,7 +197,7 @@
 			return false;
 		}
 		
-		public static function RetrieveUser($data = null): User|null {
+		public static function RetrieveUser(): User|null {
 			if(session_status() != PHP_SESSION_ACTIVE) {
 				session_start();
 			}
@@ -216,7 +216,6 @@
 
 			if($user) {
 				$user->registerAction("Website");
-				
 			}
 			
 			return $user;
@@ -234,13 +233,13 @@
 
 		public static function GetRandomUsers(int $count): array {
 			$fetch_users = Database::singleton()->run(
-				"SELECT user_id FROM `users` ORDER BY RAND() LIMIT :limit",
+				"SELECT id FROM `users` ORDER BY RAND() LIMIT :limit",
 				[ ":limit" => $count ]
 			)->fetchAll(\PDO::FETCH_OBJ);
 
 			$users =  [];
 			foreach($fetch_users as $obj_user) {
-				$users[] = User::FromID($obj_user->user_id);
+				$users[] = User::FromID($obj_user->id);
 			}
 
 			return $users;
@@ -249,13 +248,13 @@
 
 		public static function GetLatestUsers(int $count): array {
 			$fetch_users = Database::singleton()->run(
-				"SELECT * FROM `users` ORDER BY `user_joindate` DESC LIMIT :limit",
+				"SELECT * FROM `users` ORDER BY `joindate` DESC LIMIT :limit",
 				[ ":limit" => $count ]
 			)->fetchAll(\PDO::FETCH_OBJ);
 
 			$users =  [];
 			foreach($fetch_users as $obj_user) {
-				$users[] = User::FromID($obj_user->user_id);
+				$users[] = User::FromID($obj_user->id);
 			}
 
 			return $users;
@@ -268,13 +267,13 @@
 				$queryfiltered = "%";
 			}
 
-			$fetch_users = Database::singleton()->run("SELECT `user_id` FROM `users`")->fetchAll(\PDO::FETCH_OBJ);
+			$fetch_users = Database::singleton()->run("SELECT `id` FROM `users`")->fetchAll(\PDO::FETCH_OBJ);
 			
 			foreach($fetch_users as $obj_user) {
-				User::FromID($obj_user->user_id)->IsOnline();
+				User::FromID($obj_user->id)->isOnline();
 			}
 
-			$stmt_getallusers = $con->prepare("SELECT * FROM `users` WHERE `user_name` LIKE ? ORDER BY `user_online` DESC, `user_joindate` DESC LIMIT ?, ?");
+			$stmt_getallusers = $con->prepare("SELECT * FROM `users` WHERE `name` LIKE ? ORDER BY `online` DESC, `joindate` DESC LIMIT ?, ?");
 			$page = (($pagenum-1)*$count);
 			
 			$stmt_getallusers->bind_param('sii', $queryfiltered, $page, $count);
@@ -296,7 +295,7 @@
 		public static function GetAllUsers(string $query = ""): array|null {
 			include $_SERVER["DOCUMENT_ROOT"]."/private/connection.php";
 			$queryfiltered = "%$query%";
-			$stmt_getallusers = $con->prepare("SELECT * FROM `users` WHERE `user_name` LIKE ?");
+			$stmt_getallusers = $con->prepare("SELECT * FROM `users` WHERE `name` LIKE ?");
 			$stmt_getallusers->bind_param('s', $queryfiltered);
 			$stmt_getallusers->execute();
 			$result = $stmt_getallusers->get_result();

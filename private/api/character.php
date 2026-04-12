@@ -186,12 +186,12 @@
 
 				// REWRITE.
 				if($_GET['c'] != "outfits") {
-					$wearing_array = $user->GetWearingArray();
+					$wearing_array = $user->getWearingArray();
 
-					$total_assets = $user->GetOwnedAssetsCount(AssetType::index($type), "", false, true, $wearing_array);
+					$total_assets = $user->getOwnedAssetsCount(AssetType::index($type), "", false, true, $wearing_array);
 					$total_pages = floor($total_assets/8)+1;
 
-					if(count($user->GetOwnedAssets(AssetType::index($type), "", false, true, $wearing_array, $total_pages, 8)) == 0 && $page != 1) {
+					if(count($user->getOwnedAssets(AssetType::index($type), "", false, true, $wearing_array, $total_pages, 8)) == 0 && $page != 1) {
 						$total_pages--;
 					}
 
@@ -199,7 +199,7 @@
 						die(header("Location: /api/character?r=getwardrobe&c=$type&p=1"));
 					}
 
-					$assets = $user->GetOwnedAssets(AssetType::index($type), "", false, true, $wearing_array, $page, 8);
+					$assets = $user->getOwnedAssets(AssetType::index($type), "", false, true, $wearing_array, $page, 8);
 
 					$assets_raw = [];
 
@@ -229,9 +229,9 @@
 				$page = isset($_GET['p']) ? intval($_GET['p']) : 1;
 				if($page < 1) $page = 1;
 				
-				$wearing_array = $user->GetWearingArray();
-				$all_assets = $user->GetOwnedAssets($category, $query, false, true, $wearing_array, $page, 8);
-				$total_pages = floor($user->GetOwnedAssetsCount($category, $query, false, true, $wearing_array)/8);
+				$wearing_array = $user->getWearingArray();
+				$all_assets = $user->getOwnedAssets($category, $query, false, true, $wearing_array, $page, 8);
+				$total_pages = floor($user->getOwnedAssetsCount($category, $query, false, true, $wearing_array)/8);
 				$assets_raw = [];
 
 				foreach($all_assets as $asset) {
@@ -253,16 +253,16 @@
 				$asset = Asset::FromID(intval($_POST['assetid']));
 
 				if($asset != null && $user->owns($asset)) {
-					die(json_encode($user->Wear($asset)));
+					die(json_encode($user->wear($asset)));
 				}				
 			} else if($request == "remove" && isset($_POST['assetid'])) {
 				$asset = Asset::FromID(intval($_POST['assetid']));
 
 				if($asset != null && $user->owns($asset)) {
-					die(json_encode($user->Unwear($asset)));
+					die(json_encode($user->takeOff($asset)));
 				}				
 			} else if($request == "getwearing") {
-				$wearing_array = $user->GetWearingArray();
+				$wearing_array = $user->getWearingArray();
 
 				$assets = [];
 
@@ -284,7 +284,7 @@
 
 				die(json_encode(["assets" => $assets]));
 			} else if($request == "getbodycolours") {
-				die(json_encode(["colours" => $user->GetBodyColours()]));
+				die(json_encode(["colours" => $user->getBodyColours()]));
 			} else if($request == "setbodycolours" &&
 				isset($_POST['head']) &&
 				isset($_POST['torso']) &&
@@ -300,16 +300,16 @@
 				$leftleg = sanitizeBodyColourID('leftleg');
 				$rightleg = sanitizeBodyColourID('rightleg');
 
-				$user->SetBodyColours($head, $torso, $leftarm, $rightarm, $leftleg, $rightleg);
+				$user->setBodyColours($head, $torso, $leftarm, $rightarm, $leftleg, $rightleg);
 				die(json_encode(["error" => false]));
 			} else if($request == "rendercharacter") {
 				
 				$mediadir = $_SERVER['DOCUMENT_ROOT']."/../renders/";
 
-				$charactermd5 = $user->GetCharacterAppearanceHash();
+				$charactermd5 = $user->getCharacterAppearanceHash();
 				
 				if(file_exists("$mediadir/$charactermd5.png")) {
-					$user->UpdateOutfitHash();
+					$user->updateOutfitHash();
 					die(json_encode(["error" => false]));
 				}
 
@@ -325,7 +325,7 @@
 					imagesavealpha($render_image, true);
 					imagepng($render_image, "$mediadir/$charactermd5.png");
 
-					$user->UpdateOutfitHash();
+					$user->updateOutfitHash();
 
 					$render = Renderer::RenderUser($user->id, true);
 
@@ -346,7 +346,7 @@
 			} else if($request == "rerendercharacter") {
 				$mediadir = $_SERVER['DOCUMENT_ROOT']."/../renders/";
 
-				$charactermd5 = $user->GetCharacterAppearanceHash();
+				$charactermd5 = $user->getCharacterAppearanceHash();
 				
 				$render = Renderer::RenderUser($user->id);
 				if($render != null) {
@@ -359,7 +359,7 @@
 					imagesavealpha($render_image, true);
 					imagepng($render_image, "$mediadir/$charactermd5.png");
 
-					$user->UpdateOutfitHash();
+					$user->updateOutfitHash();
 
 					$render = Renderer::RenderUser($user->id, true);
 

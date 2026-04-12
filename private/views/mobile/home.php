@@ -1,8 +1,3 @@
-<?php
-	if(!SESSION) {
-		die(header("Location: /login"));
-	}
-?>
 <!DOCTYPE html>
 <html> 
 	<head>

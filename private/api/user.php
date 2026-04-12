@@ -24,7 +24,7 @@
 					die(header("Location: /api/user?id=$id&request=getuserbadges&p=1"));
 				}
 				
-				$badges = $user->GetOwnedAssets(AssetType::BADGE,"", false, true, [], $page, 12);
+				$badges = $user->getOwnedAssets(AssetType::BADGE,"", false, true, [], $page, 12);
 				$badges_raw = [];
 		
 				if(count($badges) != 0) {
@@ -38,7 +38,7 @@
 					}
 				}
 		
-				die(json_encode(["badges" => $badges_raw, "page" => $page, "total_pages" => floor(count($user->GetOwnedAssets(AssetType::BADGE))/12)]));
+				die(json_encode(["badges" => $badges_raw, "page" => $page, "total_pages" => floor(count($user->getOwnedAssets(AssetType::BADGE))/12)]));
 			}
 			else if($_GET['request'] == "isadmin") {
 				die(json_encode(['error' => false, 'isadmin' => $user->isAdmin()]));
@@ -67,10 +67,10 @@
 
 				if($founduser != null) {
 					if($founduser->id != $user->id) {
-						if(!$founduser->IsFollowing($user)) {
-							$founduser->Follow($user);
+						if(!$founduser->isFollowing($user)) {
+							$founduser->follow($user);
 						} else {
-							$founduser->Unfollow($user);
+							$founduser->unfollow($user);
 						}
 						
 						die(json_encode(['error' => false]));
@@ -81,10 +81,10 @@
 
 				if($founduser != null) {
 					if($founduser->id != $user->id) {
-						if($founduser->IsFriendsWith($user)) {
-							$founduser->Unfriend($user);
+						if($founduser->isFriendsWith($user)) {
+							$founduser->unfriend($user);
 						} else {
-							$founduser->Friend($user);
+							$founduser->friend($user);
 						}
 						
 						die(json_encode(['error' => false]));
@@ -95,7 +95,7 @@
 
 				if($founduser != null) {
 					if($founduser->id != $user->id) {
-						$founduser->Unfriend($user);
+						$founduser->unfriend($user);
 						
 						die(json_encode(['error' => false]));
 					}

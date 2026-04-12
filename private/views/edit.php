@@ -11,7 +11,7 @@
 	use anorrl\Place;
 	use anorrl\utilities\UtilUtils;
 
-	$user = SESSION ? SESSION->user : null;
+	$user = SESSION->user;
 
 	$id = intval($_GET['id']);
 

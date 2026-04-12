@@ -18,15 +18,11 @@
 		die(header("Location: /my/home"));
 	}
 	
-	$user = SESSION ? SESSION->user : null;
-
-	if($user == null) {
-		die(header("Location: /login"));
-	}
+	$user = SESSION->user;
 
 	$header_data = $get_user;
 	
-	$following = $get_user->GetFollowing();
+	$following = $get_user->getFollowing();
 
 	$page = new Page("{$get_user->name}'s Following");
 	$page->addStylesheet("/css/new/my/friends.css?v=1");
@@ -54,7 +50,7 @@
 				$profile = "headshot";
 			}
 
-			$status = $friendo->IsOnline() ? "Online" : "Offline";
+			$status = $friendo->isOnline() ? "Online" : "Offline";
 			
 			$fname = $friendo->name;
 			echo <<<EOT

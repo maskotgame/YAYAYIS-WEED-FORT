@@ -3,10 +3,6 @@
 	use anorrl\User;
 	use anorrl\Database;
 
-	if(!SESSION) {
-		die(header("Location: /login"));
-	}
-
 	$user = SESSION->user;
 
 	$fetch = Database::singleton()->run(
@@ -16,7 +12,7 @@
 
 	$number_of_friends = count($fetch);
 
-	$page = new Page("Your Friends");
+	$page = new Page("Your Friends", "my/friends");
 	$page->addStylesheet("/css/new/my/friends.css?v=1");
 	$page->addScript("/js/friends.js?t=1771413807");
 
@@ -79,7 +75,7 @@
 				$profile = "headshot";
 			}
 
-			$status = $friendo->IsOnline() ? "Online" : "Offline";
+			$status = $friendo->isOnline() ? "Online" : "Offline";
 			
 			$fname = $friendo->name;
 			echo <<<EOT

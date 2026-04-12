@@ -2,13 +2,6 @@
 
 	use anorrl\Page;
 	use anorrl\utilities\FileSplasher;
-	use anorrl\utilities\UserUtils;
-
-	$user = UserUtils::RetrieveUser();
-
-	if($user == null) {
-		die(header("Location: /login"));
-	}
 
 	$randomsplash = new FileSplasher("catalog")->getRandomSplash();
 

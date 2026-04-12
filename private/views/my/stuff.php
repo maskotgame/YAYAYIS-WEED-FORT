@@ -1,11 +1,7 @@
 <?php
 	use anorrl\Page;
 
-	if(!SESSION) {
-		die(header("Location: /login"));
-	}
-
-	$page = new Page("Your Stuff");
+	$page = new Page("Your Stuff", "my/stuff");
 	$page->addStylesheet("/css/new/stuff.css?v=1");
 	$page->addStylesheet("/css/new/forms.css");
 	$page->addScript("/js/stuff.js?t=177112345");

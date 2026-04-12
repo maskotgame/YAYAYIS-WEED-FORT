@@ -6,14 +6,14 @@
 	header("Pragma: no-cache");
 	header("Content-Type: application/json");
 
-	$user = SESSION ? SESSION->user : null;
+	$user = SESSION->user;
 
 	if(isset($_GET['recipientUserId']) && $user != null) {
 		$toFriendUser = User::FromID(intval($_GET['recipientUserId']));
 
 		if($toFriendUser != null) {
 			if(!$user->IsFriendsWith($toFriendUser)) {
-				$user->Friend($toFriendUser);
+				$user->friend($toFriendUser);
 
 				die(json_encode(
 					[

@@ -7,7 +7,7 @@
 	$user = User::FromID($id);
 
 	if($user != null) {
-		$friends = $user->GetFriends();
+		$friends = $user->getFriends();
 		$result = [];
 		foreach($friends as $friend) {
 			$result[] = [

@@ -67,7 +67,7 @@ game:GetService("ChangeHistoryService"):SetEnabled(true)
 
 	header("Content-Type: text/plain");
 
-	$user = SESSION ? SESSION->user : null;
+	$user = SESSION->user;
 	$domain = CONFIG->domain;
 
 	if($user != null) {

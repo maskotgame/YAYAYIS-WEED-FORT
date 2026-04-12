@@ -7,7 +7,21 @@
 
 	function route($method, $path, $file) {
 		global $router;
-		$router->map($method, $path, function(...$params) use ($file) {
+		$router->map($method, $path, function(...$params) use ($path, $file) {
+
+			// yeah i just dont feel like it
+			if(
+				$path != "/login" &&
+				$path != "/register" &&
+				$path != "/" &&
+				$path != "/index" &&
+				!str_starts_with($file, "/private/thumbs/") &&
+				$file != "/private/gameapis/assetdeliverer.php" &&
+				!SESSION
+			) {
+				die(header("Location: /login"));
+			}
+
 			foreach ($params as $key => $value) {
 				$$key = $value;
 			}
@@ -59,7 +73,6 @@
 	route('GET|POST', '/create/', '/private/views/create.php');
 
 	route('GET|POST', '/[*:name]-item', '/private/views/item.php');
-	//route('GET|POST', '/[*:name]-place', '/private/views/place.php');
 
 	$router->map('GET', '/game/[i:id]', function($id) {
 		$name = "a";

@@ -18,6 +18,7 @@
 		public bool $nightbg_enabled;
 		public Asset|null $background_music = null;
 		public string $css = "";
+		public bool $loadingscreens_enabled;
 
 		public static function Get(User|null $user = null) {
 			if($user == null) {
@@ -29,7 +30,8 @@
 					"headshots" => 0,
 					"nightbg" => 0,
 					"bgm" => -1,
-					"css" => ""
+					"css" => "",
+					"loadingscreens" => true
 				]);
 			}
 
@@ -62,6 +64,7 @@
 				$this->nightbg_enabled = boolval($rowdata['nightbg']);
 				$this->background_music = $rowdata['bgm'] <= 0 ? null : Asset::FromID($rowdata['bgm']);
 				$this->css = $rowdata['css'];
+				$this->loadingscreens_enabled = boolval($rowdata['loadingscreens']);
 			} else {
 				$this->user = User::FromID(intval($rowdata->userid));
 				$this->randoms_enabled = boolval($rowdata->randoms);
@@ -71,6 +74,7 @@
 				$this->nightbg_enabled = boolval($rowdata->nightbg);
 				$this->background_music = $rowdata->bgm <= 0 ? null : Asset::FromID($rowdata->bgm);
 				$this->css = $rowdata->css;
+				$this->loadingscreens_enabled = boolval($rowdata->loadingscreens);
 			}
 			
 			if($this->background_music && $this->background_music->type != AssetType::AUDIO)
@@ -80,18 +84,16 @@
 		function setValue(string $name, bool|int $value) {
 			$stmt_value = null;
 
-			if(is_bool($stmt_value))
-				$stmt_value = $value ? 1 : 0;
-			elseif(is_string($stmt_value))
+			if(is_bool($value))
+				$stmt_value = $value ? 1 : 0; 
+			elseif(is_string($value))
 				$stmt_value = trim($stmt_value);
 			elseif(is_int($value))
 				$stmt_value = $value;
 
-
 			Database::singleton()->run(
-				"UPDATE `users_settings` SET `:name` = :value WHERE `userid` = :id;",
+				"UPDATE `users_settings` SET `$name` = :value WHERE `userid` = :id;",
 				[
-					":name" => $name,
 					":value" => $stmt_value,
 					":id" => $this->user->id
 				]
@@ -122,6 +124,11 @@
 			$this->setValue("headshots", $value);
 			$this->headshots_enabled = $value;
 		}
+
+		function setLoadingScreensEnabled(bool $value) {
+			$this->setValue("loadingscreens", $value);
+			$this->loadingscreens_enabled = $value;
+		}
 		
 		function setBackgroundMusic(Asset|int|null $asset = null) {
 			$parsed_asset = is_int($asset) ? Asset::FromID($asset) : $asset;
@@ -147,7 +154,7 @@
 				}
 
 				Database::singleton()->run(
-					"UPDATE `users` SET `user_css` = :css WHERE `user_id` = :id;",
+					"UPDATE `users` SET `css` = :css WHERE `id` = :id;",
 					[
 						":id" => $this->user->id,
 						":css" => $data

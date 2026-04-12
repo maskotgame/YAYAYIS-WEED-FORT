@@ -13,29 +13,29 @@
 			die(json_encode(
 				[
 					"success" => true,
-					"count" => $user->GetFriendsCount()
+					"count" => $user->getFriendsCount()
 				]
 			));
 		} else {
-			$user = SESSION ? SESSION->user : null;
+			$user = SESSION->user;
 
 			if($user != null) {
 				die(json_encode(
 					[
 						"success" => true,
-						"count" => $user->GetFriendsCount()
+						"count" => $user->getFriendsCount()
 					]
 				));
 			} 
 		}
 	} else {
-		$user = SESSION ? SESSION->user : null;
+		$user = SESSION->user;
 
 		if($user != null) {
 			die(json_encode(
 				[
 					"success" => true,
-					"count" => $user->GetFriendsCount()
+					"count" => $user->getFriendsCount()
 				]
 			));
 		} 

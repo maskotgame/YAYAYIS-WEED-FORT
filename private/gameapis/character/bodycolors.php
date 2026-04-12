@@ -36,7 +36,7 @@ if(isset($_GET['clothing'])): ?>
 	if(isset($_GET['userId'])) {
 		$user = User::FromID(intval($_GET['userId']));
 		if($user != null) {
-			$colours = $user->GetBodyColours();
+			$colours = $user->getBodyColours();
 		} else {
 			die();
 		}

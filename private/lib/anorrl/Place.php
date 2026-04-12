@@ -54,12 +54,12 @@
 				if($place instanceof Place) {
 					$visits = $place->visit_count;
 					
-					if($visits > 100 && !$place->creator->HasProfileBadgeOf(ANORRLBadge::HOMESTEAD)) {
-						$place->creator->GiveProfileBadge(ANORRLBadge::HOMESTEAD);
+					if($visits > 100 && !$place->creator->hasProfileBadgeOf(ANORRLBadge::HOMESTEAD)) {
+						$place->creator->giveProfileBadge(ANORRLBadge::HOMESTEAD);
 					}
 
-					if($visits > 1000 && !$place->creator->HasProfileBadgeOf(ANORRLBadge::BRICKSMITH)) {
-						$place->creator->GiveProfileBadge(ANORRLBadge::BRICKSMITH);
+					if($visits > 1000 && !$place->creator->hasProfileBadgeOf(ANORRLBadge::BRICKSMITH)) {
+						$place->creator->giveProfileBadge(ANORRLBadge::BRICKSMITH);
 					}
 
 					self::UpdatePlaceStats($place->id);
@@ -228,29 +228,29 @@
 
 			$placeid = $this->id;
 
-			$stmt_checkvisit = $con->prepare('SELECT * FROM `visit` WHERE `visit_place` = ? AND `visit_player` = ? AND `visit_time` >= CURDATE() - INTERVAL 1 HOUR;');
+			$stmt_checkvisit = $con->prepare('SELECT * FROM `visits` WHERE `place` = ? AND `player` = ? AND `time` >= CURDATE() - INTERVAL 1 HOUR;');
 			$stmt_checkvisit->bind_param('ii', $placeid, $userid);
 			$stmt_checkvisit->execute();
 
 			if($stmt_checkvisit->get_result()->num_rows == 0) {
-				$stmt_addvisit = $con->prepare('INSERT INTO `visit`(`visit_place`, `visit_player`) VALUES (?, ?)');
+				$stmt_addvisit = $con->prepare('INSERT INTO `visits`(`place`, `player`) VALUES (?, ?)');
 				$stmt_addvisit->bind_param('ii', $placeid, $userid);
 				$stmt_addvisit->execute();
 
 				// Update
 
-				$stmt_visitcount = $con->prepare('SELECT * FROM `visit` WHERE `visit_place` = ?;');
+				$stmt_visitcount = $con->prepare('SELECT * FROM `visits` WHERE `place` = ?;');
 				$stmt_visitcount->bind_param('i', $placeid);
 				$stmt_visitcount->execute();
 	
 				$visits = $stmt_visitcount->get_result()->num_rows;
 
-				if($visits > 100 && !$this->creator->HasProfileBadgeOf(ANORRLBadge::HOMESTEAD)) {
-					$this->creator->GiveProfileBadge(ANORRLBadge::HOMESTEAD);
+				if($visits > 100 && !$this->creator->hasProfileBadgeOf(ANORRLBadge::HOMESTEAD)) {
+					$this->creator->giveProfileBadge(ANORRLBadge::HOMESTEAD);
 				}
 
-				if($visits > 1000 && !$this->creator->HasProfileBadgeOf(ANORRLBadge::BRICKSMITH)) {
-					$this->creator->GiveProfileBadge(ANORRLBadge::BRICKSMITH);
+				if($visits > 1000 && !$this->creator->hasProfileBadgeOf(ANORRLBadge::BRICKSMITH)) {
+					$this->creator->giveProfileBadge(ANORRLBadge::BRICKSMITH);
 				}
 	
 				$stmt = $con->prepare('UPDATE `asset_places` SET `place_visit_count` = ? WHERE `place_id` = ?;');

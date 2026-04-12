@@ -2,15 +2,9 @@
 	use anorrl\Page;
 	use anorrl\utilities\FileSplasher;
 
-	$user = SESSION ? SESSION->user : null;
-
-	if($user == null) {
-		die(header("Location: /login"));
-	}
-
 	$randomsplash = new FileSplasher("client")->getRandomSplash();
 
-	$page = new Page("Download");
+	$page = new Page("Download", "download/index");
 	$page->addStylesheet("/css/new/download.css");
 
 	$page->loadHeader();

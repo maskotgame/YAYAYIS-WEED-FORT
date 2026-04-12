@@ -2,12 +2,7 @@
 	use anorrl\Page;
 	use anorrl\Status;
 
-	$user = SESSION ? SESSION->user : null;
-
-	if($user == null) {
-		die(header("Location: /login"));
-	}
-
+	$user = SESSION->user;
 
 	if(isset($_POST['ANORRL$Home$Status$Text']) &&
 	   isset($_POST['ANORRL$Home$Status$Submit'])) {
@@ -24,7 +19,7 @@
 		die(header("Location: /my/home"));
 	}
 
-	$page = new Page("Home");
+	$page = new Page("Home", "my/home");
 
 	$page->addStylesheet("/css/new/my/home.css?v=2");
 	$page->addScript("/js/home.js?t=1771413807");
@@ -53,8 +48,8 @@
 			<a href="/users/<?= $user->id ?>/profile"><img id="ProfilePicture" src="/thumbs/player?id=<?= $user->id ?>&sxy=200"></a>
 			<div id="StatusContainer">
 			<?php 
-				if($user->GetLatestStatus() != null) {
-					$status = $user->GetLatestStatus()->content;
+				if($user->getLatestStatus() != null) {
+					$status = $user->getLatestStatus()->content;
 					echo <<<EOT
 						<span id="Quotation" style="top: 4px;left: 7px;">&quot;</span>
 							<span id="Status">$status</span>
@@ -70,11 +65,11 @@
 		</div>
 		</div>
 		<div id="FriendsContainer">
-			<h3>Friends<?php if($user->GetFriendsCount() > 5): ?> <a href="/my/friends" style="font-size: 12px;">(See all)</a><?php endif ?></h3>
-			<?php if($user->GetFriendsCount() != 0): ?>
+			<h3>Friends<?php if($user->getFriendsCount() > 5): ?> <a href="/my/friends" style="font-size: 12px;">(See all)</a><?php endif ?></h3>
+			<?php if($user->getFriendsCount() != 0): ?>
 			<ul id="Friends">
 			<?php 
-				$friends = $user->GetFriends();
+				$friends = $user->getFriends();
 				shuffle($friends);
 				
 				if(count($friends) > 5) {

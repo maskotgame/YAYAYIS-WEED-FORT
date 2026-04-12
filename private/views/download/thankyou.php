@@ -1,11 +1,5 @@
 <?php
 	use anorrl\Page;
-	
-	$user = SESSION ? SESSION->user : null;
-
-	if($user == null) {
-		die(header("Location: /login"));
-	}
 
 	$page = new Page("Thanks for downloading...");
 	$page->addStylesheet("/css/new/download.css");

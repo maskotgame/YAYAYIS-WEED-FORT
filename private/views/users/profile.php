@@ -27,16 +27,12 @@
 	if(isset($_GET['redirect']) && $_GET['redirect'] == "true") {
 		die(header("Location: /users/".$get_user->id."/profile"));
 	}
-	
-	$user = UserUtils::RetrieveUser($get_user);
 
-	if($user == null) {
-		die(header("Location: /login"));
-	}
+	$user = SESSION->user;
 
 	$header_data = $get_user;
 
-	$games = $get_user->GetOwnedAssets(AssetType::PLACE, "", true, $get_user->id == $user->id);
+	$games = $get_user->getOwnedAssets(AssetType::PLACE, "", true, $get_user->id == $user->id);
 
 	if(
 		isset($_POST['ANORRL$Comment$Post$Contents']) &&
@@ -58,7 +54,7 @@
 		$bgm = null;
 	}
 
-	$page = new Page($get_user->name);
+	$page = new Page($get_user->id == $user->id ? "Your Profile" : "{$get_user->name}'s Profile");
 
 	$page->addStylesheet("/css/new/stuff.css?v=1");
 	$page->addStylesheet("/css/new/comments.css");
@@ -203,16 +199,16 @@ $(function() {
 					
 					<?php
 						$friend_button_label = "Add Friend";
-						$follow_label = $user->IsFollowing($get_user) ? "Unfollow" : "Follow";
+						$follow_label = $user->isFollowing($get_user) ? "Unfollow" : "Follow";
 
-						if($user->IsFriendsWith($get_user)) {
+						if($user->isFriendsWith($get_user)) {
 							$friend_button_label = "Unfriend :[";
 						}
 						else {
-							if($user->IsPendingFriendsReq($get_user)) {
+							if($user->isPendingFriendsReq($get_user)) {
 								$friend_button_label = "Cancel Req.";
 							} else {
-								if($user->IsIncomingFriendsReq($get_user)) {
+								if($user->isIncomingFriendsReq($get_user)) {
 									$friend_button_label = "Accept Req.";
 								}
 							}
@@ -220,7 +216,7 @@ $(function() {
 					?>
 
 					<button style="width: 107px;" onclick="ANORRL.User.Friend(<?= $get_user->id ?>)"><?= $friend_button_label ?></button>
-					<button style="width: 70px;margin-left: 2px;" onclick="ANORRL.User.Follow(<?= $get_user->id ?>);"><?= $follow_label ?></button><br>
+					<button style="width: 70px;margin-left: 2px;" onclick="ANORRL.User.follow(<?= $get_user->id ?>);"><?= $follow_label ?></button><br>
 				<?php else: ?>
 				<button style="width: 74px;">It's you.</button>
 				<?php endif ?>
@@ -231,18 +227,18 @@ $(function() {
 		<div id="Stats">
 			<div id="FollowFriendsWhatever">
 				<a href="/users/<?= $get_user->id ?>/friends">
-					<b id="Numbers"><?= $get_user->GetFriendsCount() ?></b> <span>Friends</span>
+					<b id="Numbers"><?= $get_user->getFriendsCount() ?></b> <span>Friends</span>
 				</a> | 
 				<a href="/users/<?= $get_user->id ?>/followers">
-					<b id="Numbers"><?= $get_user->GetFollowersCount() ?></b> <span>Followers</span>
+					<b id="Numbers"><?= $get_user->getFollowersCount() ?></b> <span>Followers</span>
 				</a> | 
 				<a href="/users/<?= $get_user->id ?>/following">
-					<b id="Numbers"><?= $get_user->GetFollowingCount() ?></b> <span>Following</span>
+					<b id="Numbers"><?= $get_user->getFollowingCount() ?></b> <span>Following</span>
 				</a>
 			</div>
 			<div id="OnlineStatusArea">
-				<?php $profile_status = $get_user->IsOnline() ? "Online" : "Offline"; ?>										
-				<span class="<?= $profile_status ?>"><b><?= $profile_status ?></b> - <?= $get_user->GetOnlineActivity() ?></span>
+				<?php $profile_status = $get_user->isOnline() ? "Online" : "Offline"; ?>										
+				<span class="<?= $profile_status ?>"><b><?= $profile_status ?></b> - <?= $get_user->getOnlineActivity() ?></span>
 
 			</div>
 			<div id="OnlineStatusArea" style="padding-top:0px; margin-top:-5px;">
@@ -272,7 +268,7 @@ $(function() {
 <h3><?= $get_user->name ?>'s Character</h3>
 <div id="UserAvatarPane">
 	<ul id="AvatarItems">
-		<?php if(count($get_user->GetWearingArray()) == 0): ?>
+		<?php if(count($get_user->getWearingArray()) == 0): ?>
 		<li>
 			<div id="NoItemsOn">
 				<?= $get_user->name ?> does not have any items on!
@@ -280,7 +276,7 @@ $(function() {
 		</li>
 		<?php else: ?>
 		<?php 
-			$items = $get_user->GetWearingArray();
+			$items = $get_user->getWearingArray();
 			foreach($items as $item) {
 				$asset = Asset::FromID($item);
 
@@ -361,7 +357,7 @@ $(function() {
 		<h3>ANORRL Badges</h3>
 		<table id="BadgesPane">
 			<?php 
-				$profilebadges = $get_user->GetProfileBadges();
+				$profilebadges = $get_user->getProfileBadges();
 				$count = count($profilebadges);
 				$iteration_countfull = 0;
 				$iteration_count = 0;
