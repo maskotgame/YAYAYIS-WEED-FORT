@@ -80,7 +80,7 @@
 
 			$base_sql_query = "SELECT * FROM `assets` WHERE `name` LIKE ? AND `type` = ? $query_filter";
 			if($type == AssetType::PLACE) {
-				$base_sql_query = "SELECT asset_places.* FROM `places`, `assets` WHERE assets.asset_id = asset_places.place_id AND `name` LIKE ? AND `type` = ? $query_filter ".($_SESSION['ANORRL$Games$OriginalOnly'] ? " AND `original` = 1 " : "");
+				$base_sql_query = "SELECT asset_places.* FROM `asset_places`, `assets` WHERE assets.id = asset_places.id AND `name` LIKE ? AND `type` = ? $query_filter ".($_SESSION['ANORRL$Games$OriginalOnly'] ? " AND `original` = 1 " : "");
 			}
 			
 			$filter = match($filter) {
@@ -90,7 +90,7 @@
 				CatalogFilter::OldestUpdated    => "ORDER BY `lastedited` ASC",
 				CatalogFilter::MostSold         => "ORDER BY `sales_count` DESC, `lastedited` DESC",
 				CatalogFilter::MostFavourited   => "ORDER BY `favourites_count` DESC, `lastedited` DESC",
-				CatalogFilter::MostPopular      => "ORDER BY `currently_playing` DESC, `visit_count` DESC, `lastedited` DESC",
+				CatalogFilter::MostPopular      => "ORDER BY `currently_playing_count` DESC, `visit_count` DESC, `lastedited` DESC",
 				CatalogFilter::MostVisited      => "ORDER BY `visit_count` DESC"
 			};
 			
@@ -152,7 +152,7 @@
 
 			$base_sql_query = "SELECT COUNT(`id`) FROM `assets` WHERE `name` LIKE ? AND `type` = ? $query_filter";
 			if($type == AssetType::PLACE) {
-				$base_sql_query = "SELECT COUNT(`id`) FROM `places`, `assets` WHERE assets.asset_id = asset_places.place_id AND `name` LIKE ? AND `type` = ? $query_filter ".($_SESSION['ANORRL$Games$OriginalOnly'] ? " AND `original` = 1 " : "");
+				$base_sql_query = "SELECT COUNT(`asset_places`.`id`) FROM `asset_places`, `assets` WHERE assets.id = asset_places.id AND `name` LIKE ? AND `type` = ? $query_filter ".($_SESSION['ANORRL$Games$OriginalOnly'] ? " AND `original` = 1 " : "");
 			}
 			
 			$filter = match($filter) {
@@ -162,7 +162,7 @@
 				CatalogFilter::OldestUpdated    => "ORDER BY `lastedited` ASC",
 				CatalogFilter::MostSold         => "ORDER BY `sales_count` DESC, `lastedited` DESC",
 				CatalogFilter::MostFavourited   => "ORDER BY `favourites_count` DESC, `lastedited` DESC",
-				CatalogFilter::MostPopular      => "ORDER BY `currently_playing` DESC, `visit_count` DESC, `lastedited` DESC",
+				CatalogFilter::MostPopular      => "ORDER BY `currently_playing_count` DESC, `visit_count` DESC, `lastedited` DESC",
 				CatalogFilter::MostVisited      => "ORDER BY `visit_count` DESC"
 			};
 			
@@ -190,7 +190,7 @@
 			}
 			
 			if($type == AssetType::PLACE) {
-				return $row['COUNT(`id`)'];
+				return $row['COUNT(`asset_places`.`id`)'];
 			}
 			
 			return $row['COUNT(`id`)'];

@@ -16,7 +16,7 @@
 
 		public static function GetVersionFromID(int $versionid) {
 			include $_SERVER["DOCUMENT_ROOT"]."/private/connection.php";
-			$stmt_getuser = $con->prepare("SELECT * FROM `versions` WHERE `id` = ?");
+			$stmt_getuser = $con->prepare("SELECT * FROM `asset_versions` WHERE `id` = ?");
 			$stmt_getuser->bind_param('i', $versionid);
 			$stmt_getuser->execute();
 			$result = $stmt_getuser->get_result();
@@ -43,7 +43,7 @@
 				$id = $asset->id;
 			}
 			include $_SERVER["DOCUMENT_ROOT"]."/private/connection.php";
-			$stmt_getuser = $con->prepare("SELECT * FROM `versions` WHERE `assetid` = ? AND `subid` = ?");
+			$stmt_getuser = $con->prepare("SELECT * FROM `asset_versions` WHERE `assetid` = ? AND `subid` = ?");
 			$stmt_getuser->bind_param('ii', $id, $version);
 			$stmt_getuser->execute();
 			$result = $stmt_getuser->get_result();
@@ -79,7 +79,7 @@
 			}
 
 			Database::singleton()->run(
-				"UPDATE `versions` SET `md5thumb` = :md5 WHERE `id` = :id",
+				"UPDATE `asset_versions` SET `md5thumb` = :md5 WHERE `id` = :id",
 				[
 					":md5" => $md5hash,
 					":id" => $this->id
@@ -104,7 +104,7 @@
 				return;
 
 			Database::singleton()->run(
-				"UPDATE `versions` SET `md5thumb` = :md5 WHERE `id` = :id",
+				"UPDATE `asset_versions` SET `md5thumb` = :md5 WHERE `id` = :id",
 				[
 					":md5" => ($asset->id == $this->asset->id ? $this : $version)->md5sig,
 					":id" => $this->id

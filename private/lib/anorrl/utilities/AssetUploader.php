@@ -179,7 +179,7 @@
 					file_put_contents($filepath, $data);
 				}
 
-				$stmt = $con->prepare('INSERT INTO `versions`(`assetid`, `md5sig`, `md5thumb`) VALUES (?, ?, ?)');
+				$stmt = $con->prepare('INSERT INTO `asset_versions`(`assetid`, `md5sig`, `md5thumb`) VALUES (?, ?, ?)');
 				$stmt->bind_param('iss', $id, $md5, $md5);
 				if(!$stmt->execute()) {
 					$stmt = $con->prepare('DELETE FROM `assets` WHERE `id` = ?;');
@@ -257,7 +257,7 @@
 
 				$new_versionid = count($asset->getAllVersions())+1;
 
-				$stmt = $con->prepare('INSERT INTO `versions`(`assetid`, `md5sig`, `md5thumb`, `subid`) VALUES (?, ?, ?, ?)');
+				$stmt = $con->prepare('INSERT INTO `asset_versions`(`assetid`, `md5sig`, `md5thumb`, `subid`) VALUES (?, ?, ?, ?)');
 				$stmt->bind_param('issi', $id, $md5, $md5, $new_versionid);
 				try {
 					if(!$stmt->execute()) {
@@ -414,7 +414,7 @@
 
 			if(!$result['error']) {
 				include $_SERVER['DOCUMENT_ROOT']."/private/connection.php";
-				$stmt_addplace = $con->prepare("INSERT INTO `places`(`id`, `copylocked`, `serversize`, `gears_enabled`, `original`) VALUES (?, ?, ?, ?, ?)");
+				$stmt_addplace = $con->prepare("INSERT INTO `asset_places`(`id`, `copylocked`, `serversize`, `gears_enabled`, `original`) VALUES (?, ?, ?, ?, ?)");
 				
 				$place_copylocked = $copylocked ? 1 : 0;
 				$place_gears = $gears_enabled ? 1 : 0;
@@ -656,7 +656,7 @@
 										$stmt->execute();
 
 										if($type == AssetType::DECAL || $type == AssetType::FACE) {
-											/*$stmt = $con->prepare("UPDATE `versions` SET `md5thumb` = ? WHERE `assetid` = ?");
+											/*$stmt = $con->prepare("UPDATE `asset_versions` SET `md5thumb` = ? WHERE `assetid` = ?");
 											$stmt->bind_param('si', $md5hashfile, $result['id']);
 											$stmt->execute();*/
 										}

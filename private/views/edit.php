@@ -140,7 +140,7 @@
 				$server_size = $allUsersCount;
 			}
 
-			$stmt = $con->prepare('UPDATE `places` SET `copylocked` = ?, `serversize` = ?, `original` = ?, `gears_enabled` = ? WHERE `id` = ?;');
+			$stmt = $con->prepare('UPDATE `asset_places` SET `copylocked` = ?, `serversize` = ?, `original` = ?, `gears_enabled` = ? WHERE `id` = ?;');
 			$stmt->bind_param('iiiii', $copylocked, $server_size, $original, $gears, $id);
 			$stmt->execute();
 

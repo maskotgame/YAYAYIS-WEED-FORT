@@ -218,7 +218,7 @@
 
 		function getAllVersions(): array {
 			include $_SERVER["DOCUMENT_ROOT"]."/private/connection.php";
-			$stmt_getuser = $con->prepare("SELECT * FROM `versions` WHERE `assetid` = ? ORDER BY `id` DESC");
+			$stmt_getuser = $con->prepare("SELECT * FROM `asset_versions` WHERE `assetid` = ? ORDER BY `id` DESC");
 			$stmt_getuser->bind_param('i', $this->id);
 			$stmt_getuser->execute();
 
@@ -240,7 +240,7 @@
 
 		function getVersionID(): int {
 			include $_SERVER['DOCUMENT_ROOT']."/private/connection.php";
-			$stmt = $con->prepare("SELECT * FROM `versions` WHERE `assetid` = ? ORDER BY `id`");
+			$stmt = $con->prepare("SELECT * FROM `asset_versions` WHERE `assetid` = ? ORDER BY `id`");
 			$stmt->bind_param("i", $this->id);
 			$stmt->execute();
 
@@ -255,7 +255,7 @@
 
 		function getMD5Hash(int $version): string {
 			include $_SERVER['DOCUMENT_ROOT']."/private/connection.php";
-			$stmt = $con->prepare("SELECT * FROM `versions` WHERE `id` = ?");
+			$stmt = $con->prepare("SELECT * FROM `asset_versions` WHERE `id` = ?");
 			$stmt->bind_param("i", $version);
 			$stmt->execute();
 
@@ -449,7 +449,7 @@
 				if(file_exists($_SERVER['DOCUMENT_ROOT']."/../assets/thumbs/".AssetVersion::GetLatestVersionOf($this)->md5thumb)) {
 
 				} else {
-					$stmt = $con->prepare("UPDATE `versions` SET `md5thumb` = 'placeholder' WHERE `id` = ?");
+					$stmt = $con->prepare("UPDATE `asset_versions` SET `md5thumb` = 'placeholder' WHERE `id` = ?");
 					$stmt->bind_param('i', AssetVersion::GetLatestVersionOf($this)->id);
 					$stmt->execute();
 				}
@@ -488,7 +488,7 @@
 					$stmt->execute();
 
 					if($asset->type == AssetType::PLACE) {
-						$stmt = $con->prepare('DELETE FROM `places` WHERE `id` = ?');
+						$stmt = $con->prepare('DELETE FROM `asset_places` WHERE `id` = ?');
 						$stmt -> bind_param("i", $id);
 						$stmt->execute();
 					}*/
@@ -575,7 +575,7 @@
 				$md5s = [];
 
 				foreach($ids as $key => $value) {
-					$stmt = $con->prepare("SELECT * FROM `versions` WHERE `assetid` = ? ORDER BY `id` DESC;");
+					$stmt = $con->prepare("SELECT * FROM `asset_versions` WHERE `assetid` = ? ORDER BY `id` DESC;");
 					$stmt->bind_param("i", $value);
 					$stmt->execute();
 
@@ -588,7 +588,7 @@
 				}
 
 				foreach($md5s as $key => $value) {
-					$stmt = $con->prepare("SELECT * FROM `versions` WHERE `md5sig` = ? AND `assetid` != ? ORDER BY `id` DESC;");
+					$stmt = $con->prepare("SELECT * FROM `asset_versions` WHERE `md5sig` = ? AND `assetid` != ? ORDER BY `id` DESC;");
 					$stmt->bind_param("si", $value, $key);
 					$stmt->execute();
 
