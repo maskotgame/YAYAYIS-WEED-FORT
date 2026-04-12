@@ -87,13 +87,17 @@
 			const wait = (delay = 0) =>	new Promise(resolve => setTimeout(resolve, delay));
 
 			function setVisible(element, visible) {
-				$(element).css("display", visible ? "flex" : "none");
+				if(element == "#LoadingScreen")
+					$(element).css("display", visible ? "flex" : "none");
+				else
+					$(element).css("display", visible ? "block" : "none");
 			}
 
 			// do loading screen if the page hasn't loaded in a second.
 
 			var hasLoaded = false;
 			var initiateLoading = false;
+			setVisible("#Container", false);
 
 			wait(1000).then(() => {
 				if(!hasLoaded) {
@@ -104,6 +108,7 @@
 
 			document.addEventListener('DOMContentLoaded', function() {
 				hasLoaded = true;
+				setVisible("#Container", true);
 				if(initiateLoading) {
 					// mom im a genius
 					wait(200).then(() => {
