@@ -61,7 +61,7 @@
 				position: fixed;
 				width: 100vw;
 				height: 100vh;
-				background: linear-gradient(#33333355, #00000055);
+				background: linear-gradient(#33333366, #00000066);
 				z-index: 10000;
 				color: white;
 				text-align: center;
