@@ -90,10 +90,15 @@
 	margin-bottom: 15px;
 }
 
-#IntroductoryArea #TeapotsMayhem img {
+#IntroductoryArea #TeapotsMayhem img,
+#IntroductoryArea #TeapotsMayhem iframe {
 	width: 100%;
 	transform: rotate(4deg);
 	margin-top: -14px;
+}
+
+#IntroductoryArea #TeapotsMayhem iframe {
+	border: 2px solid black;
 }
 
 #IntroductoryArea #GracingIt {
@@ -192,7 +197,8 @@
 }
 
 #IntroductoryArea #TeapotsMayhem,
-#IntroductoryArea #TeapotsMayhem img {
+#IntroductoryArea #TeapotsMayhem img,
+#IntroductoryArea #TeapotsMayhem iframe {
 	transition: transform 0.5s;
 }
 
@@ -206,7 +212,8 @@
 	transform: scale(1.05) rotate(-6deg);
 }
 
-#IntroductoryArea #TeapotsMayhem:hover img {
+#IntroductoryArea #TeapotsMayhem:hover img,
+#IntroductoryArea #TeapotsMayhem:hover iframe {
 	transform: scale(1.025) rotate(10deg);
 }
 

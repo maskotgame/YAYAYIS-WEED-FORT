@@ -4,7 +4,7 @@
 	use anorrl\Page;
 
 	$page = new Page("Welcome to ANORRL!");
-	$page->addStylesheet("/css/new/frontpage.css?v=3");
+	$page->addStylesheet("/css/new/frontpage.css?v=4");
 	$page->loadHeader();
 
 	$settings = SESSION ? SESSION->settings : UserSettings::Get();
@@ -16,7 +16,8 @@
 			<a href="/images/header/logo.png" target="_blank"><img src="/images/header/logo.png" title="welcome to anorrl!"></a>
 		</div>
 		<div id="TeapotsMayhem">
-			<a href="/images/frontpage/gang_clean.png" target="_blank"><img src="/images/frontpage/gang.png" title="created by grace and power!"></a>
+			<iframe width="480" height="270" src="https://www.youtube.com/embed/fLjkmwysms0" title="you'd rather live to please..." frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"></iframe>
+			<!--<a href="/images/frontpage/gang_clean.png" target="_blank"><img src="/images/frontpage/gang.png" title="created by grace and power!"></a>-->
 		</div>
 	</div>
 	
