@@ -55,7 +55,7 @@
 		function String($n) {
 			$indexbak = $this->index;
 			$this->Jump($n);
-			return substr($this->buffer,$indexbak,$n);
+			return substr($this->buffer ?? '',$indexbak,$n);
 		}
 	}
 ?>
