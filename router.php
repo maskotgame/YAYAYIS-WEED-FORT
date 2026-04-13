@@ -8,6 +8,9 @@
 	function route($method, $path, $file) {
 		global $router;
 		$router->map($method, $path, function(...$params) use ($path, $file) {
+			if(!isset($_COOKIE['ANORRL$Hidden$Cookie$yaya']) && $path != "/goodbye") {
+				die(header("Location: /goodbye"));
+			}
 
 			// yeah i just dont feel like it
 			if(
@@ -60,6 +63,7 @@
 	//route('GET',      '/test', '/private/views/test.php');
  
 	route('GET',      '/', '/private/views/index.php');
+	route('GET',      '/goodbye', '/private/views/goodbye.php');
 	route('GET',      '/index', '/private/views/index.php');
 	route('GET|POST', '/login', '/private/views/login.php');
 	route('GET|POST', '/register', '/private/views/register.php');

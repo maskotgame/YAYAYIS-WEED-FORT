@@ -7,8 +7,7 @@
 	use anorrl\Session;
 	
 	define('CONFIG', json_decode(file_get_contents(__DIR__."/../settings.json")));
-
-
+	
 	$session_user = UserUtils::RetrieveUser();
 
 	if(session_status() != PHP_SESSION_ACTIVE) {
