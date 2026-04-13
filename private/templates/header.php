@@ -115,7 +115,7 @@
 					
 				else
 					waitForElm(element).then((elm) => {
-						elm.style.display = visible ? "flex" : "none";
+						elm.style.display = visible ? "block" : "none";
 					});
 			}
 
