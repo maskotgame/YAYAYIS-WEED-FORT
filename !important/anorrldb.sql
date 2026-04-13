@@ -369,7 +369,7 @@ CREATE TABLE `users_settings` (
   `headshots` int(1) NOT NULL DEFAULT 1,
   `nightbg` int(1) NOT NULL DEFAULT 0,
   `bgm` int(11) NOT NULL DEFAULT -1,
-  `css` text NOT NULL,
+  `css` text NOT NULL DEFAULT '',
   `loadingscreens` int(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
