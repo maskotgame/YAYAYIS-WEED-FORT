@@ -11,6 +11,9 @@
 
 	$randomsignsplash = new FileSplasher("sign")->getRandomSplash();
 
+	$splashscreencaptions = file($_SERVER["DOCUMENT_ROOT"]."/private/splashes/screens.txt");
+	$splashscreencaption = $splashscreencaptions[str_replace(["ANORRLStudioSplash-", ".png"], "", $rand_splash_pic)-1];
+	
 	if(session_status() == PHP_SESSION_NONE)
 		session_start();
 
@@ -70,7 +73,16 @@
 				justify-content: center;
 				align-items: center;
 				backdrop-filter: blur(10px);
-				opacity: 0;
+				opacity: 1;
+			}
+
+			#LoadingScreen p[caption] {
+				margin-top: 3px;
+				margin-bottom: 25px;
+				font-size: 14px;
+				letter-spacing: 0px;
+				font-style:italic;
+				font-weight: bold;
 			}
 
 			#LoadingScreen img[splash] {
@@ -130,6 +142,7 @@
 		<div id="LoadingScreen">
 			<div>
 				<img src="/images/splashes/<?= $rand_splash_pic ?>" splash>
+				<p caption><?= $splashscreencaption?></p>
 				<p id="LoadingText">Loading <?= $this->title ?>...</p>
 				<img src="/images/ProgressIndicator4White.gif" loading>
 			</div>
