@@ -61,7 +61,7 @@
 				position: fixed;
 				width: 100vw;
 				height: 100vh;
-				background: linear-gradient(#33333366, #00000066);
+				background: linear-gradient(#33333399, #00000099);
 				z-index: 10000;
 				color: white;
 				text-align: center;
@@ -71,7 +71,7 @@
 				align-items: center;
 				transition: opacity 0.75s;
 				backdrop-filter: blur(10px);
-				display: none;
+				opacity: 0;
 			}
 
 			#LoadingScreen img[splash] {
@@ -83,49 +83,23 @@
 				width: 100px;
 			}
 		</style>
-		<script defer>
+		<script>
 			const wait = (delay = 0) =>	new Promise(resolve => setTimeout(resolve, delay));
-
-			function waitForElm(selector) {
-				return new Promise(resolve => {
-					if (document.querySelector(selector)) {
-						return resolve(document.querySelector(selector));
-					}
-
-					const observer = new MutationObserver(mutations => {
-						if (document.querySelector(selector)) {
-							observer.disconnect();
-							resolve(document.querySelector(selector));
-						}
-					});
-
-					// If you get "parameter 1 is not of type 'Node'" error, see https://stackoverflow.com/a/77855838/492336
-					observer.observe(document.documentElement, {
-						childList: true,
-						subtree: true
-					});
-				});
-			}
 
 			function setVisible(element, visible) {
 				if(element == "#LoadingScreen")
-					waitForElm(element).then((elm) => {
-						elm.style.display = visible ? "flex" : "none";
-					});
-					
+					document.querySelector(element).style.opacity = visible ? 1 : 0;
 				else
-					waitForElm(element).then((elm) => {
-						elm.style.display = visible ? "block" : "none";
-					});
+					document.querySelector(element).style.display = visible ? "block" : "none";
 			}
 
 			// do loading screen if the page hasn't loaded in a second.
 
 			var hasLoaded = false;
 			var initiateLoading = false;
-			setVisible("#Container", false);
 
-			document.addEventListener('DOMContentLoaded', function() {
+			$(window).load(function() {
+				console.log("hi");
 				hasLoaded = true;
 				setVisible("#Container", true);
 				if(initiateLoading) {
@@ -138,6 +112,8 @@
 					wait(1500).then(() => {
 						setVisible('#LoadingScreen', false);
 					});
+				} else {
+					$("#LoadingScreen").css("display", "none");
 				}
 			});
 
@@ -188,7 +164,7 @@
 			}
 		</style>
 		<?php endif ?>
-		<div id="Container">
+		<div id="Container" style="display: none">
 			<div id="Header">
 				<?php if($header_check_user != null): 
 					$pendingreqscount = $header_check_user->GetPendingFriendRequestsCount();	
