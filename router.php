@@ -10,20 +10,22 @@
 		$router->map($method, $path, function(...$params) use ($path, $file) {
 			if(!isset($_COOKIE['ANORRL$Hidden$Cookie$yaya']) && $path != "/goodbye") {
 				die(header("Location: /goodbye"));
+			} else {
+				// yeah i just dont feel like it
+				if(
+					$path != "/login" &&
+					$path != "/register" &&
+					$path != "/" &&
+					$path != "/index" &&
+					!str_starts_with($file, "/private/thumbs/") &&
+					$file != "/private/gameapis/assetdeliverer.php" &&
+					!SESSION
+				) {
+					die(header("Location: /login"));
+				}
 			}
 
-			// yeah i just dont feel like it
-			if(
-				$path != "/login" &&
-				$path != "/register" &&
-				$path != "/" &&
-				$path != "/index" &&
-				!str_starts_with($file, "/private/thumbs/") &&
-				$file != "/private/gameapis/assetdeliverer.php" &&
-				!SESSION
-			) {
-				die(header("Location: /login"));
-			}
+			
 
 			foreach ($params as $key => $value) {
 				$$key = $value;
