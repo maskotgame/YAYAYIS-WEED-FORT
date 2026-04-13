@@ -144,7 +144,7 @@
 				<img src="/images/splashes/<?= $rand_splash_pic ?>" splash>
 				<p caption><?= $splashscreencaption?></p>
 				<p id="LoadingText">Loading <?= $this->title ?>...</p>
-				<img src="/images/ProgressIndicator4White.gif" loading>
+				<img src="/images/spinner100x100_white.gif" loading>
 			</div>
 		</div>
 		<?php endif ?>
