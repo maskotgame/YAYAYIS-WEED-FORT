@@ -8,8 +8,8 @@
 
 
 	$user = SESSION->user;
-	if(!$user->isBanned() && isset($_POST['id'])) {
-		$asset = Asset::FromID(intval($_POST['id']));
+	if(!$user->isBanned() && isset($_POST['asset_id'])) {
+		$asset = Asset::FromID(intval($_POST['asset_id']));
 
 		if(!$asset)
 			die(json_encode(["error" => true, "message" => "Invalid purchase method."]));
