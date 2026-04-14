@@ -1,15 +1,15 @@
-# ANotherOldRobloxRevivalLol
-also known as ANORRL
+# .anorrl
+also known as ANotherOldRobloxRevivalLol
 
 This uses the [ANRSAL](https://github.com/unc-nnected/ANotherRccServiceArbiterLol/) project (created by [Aria](https://github.com/unc-nnected)) as to render and start gameservers so please use that when hosting this source!
 
+this is a FOSS project, you can submit issues and pull requests.
 
-This is a FOSS project, you can submit issues and pull requests.
+## .info
 
-^ this is an experiment i want to see how this works...
+Check out the [Trello page](https://trello.com/b/7NXCTXXp/anorrl-2016) to see what's on the to-do list!
 
-
-## ABOUT CONTRIBUTING
+## .about contributing
 
 Ok hey, if you want to contribute to the site. PLEASE invest in a local webserver.
 
@@ -19,9 +19,11 @@ It reduces the chance of errors occuring when creating a pull request.
 
 Also in your pull requests, mention WHAT you have done and provide screenshots of what you CHANGED.
 
-### arch/cachyos tutorial
+### .arch/cachyos tutorial
 [https://www.youtube.com/watch?v=Mb_xV2qz_J8](https://www.youtube.com/watch?v=Mb_xV2qz_J8)
 
 # I HEAVY ADVISE AGAINST USING GITHUB'S ON SITE EDITOR.
 
 thank you :]
+
+![grace-dance](https://github.com/user-attachments/assets/ad358059-1c75-41bf-a094-da4eab365744)
