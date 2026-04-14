@@ -81,11 +81,11 @@
 
 	$page = new Page("Create", "my/create");
 
-	$page->addStylesheet("/css/new/create.css");
-	$page->addStylesheet("/css/new/stuff.css?v=1");
+	$page->addStylesheet("/css/new/create.css?v=1");
+	$page->addStylesheet("/css/new/stuff.css?v=2");
 	$page->addStylesheet("/css/new/forms.css?v=1");
 
-	$page->addScript("/js/create.js?t=1776011774");
+	$page->addScript("/js/create.js?t=1776186351");
 	$page->loadHeader();
 ?>
 <div class="Asset" template>

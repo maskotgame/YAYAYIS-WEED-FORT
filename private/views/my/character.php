@@ -5,7 +5,7 @@
 	$page->addScript("/js/core/jquery-modal.js");
 	$page->addScript("/js/character.js?t=1776011774");
 
-	$page->addStylesheet("/css/new/stuff.css?v=1");
+	$page->addStylesheet("/css/new/stuff.css?v=2");
 	$page->addStylesheet("/css/new/my/character.css");
 	$page->addStylesheet("/css/new/forms.css");
 

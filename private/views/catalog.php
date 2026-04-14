@@ -7,10 +7,10 @@
 
 	$page = new Page("Catalog");
 
-	$page->addScript("/js/catalog.js?t=1776011774");
+	$page->addScript("/js/catalog.js?t=1776186351");
 
 	$page->addStylesheet("/css/new/forms.css");
-	$page->addStylesheet("/css/new/stuff.css?v=1");
+	$page->addStylesheet("/css/new/stuff.css?v=2");
 	$page->addStylesheet("/css/new/catalog.css");
 	
 	$page->loadHeader();

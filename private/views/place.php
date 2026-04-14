@@ -73,7 +73,7 @@
 	$page->addStylesheet("/css/new/my/home.css?v=2");
 	
 
-	$page->addScript("/js/item.js?t=1776011774");
+	$page->addScript("/js/item.js?t=1776186351");
 	$page->addScript("/js/placelauncher.js?t=1776011774");
 
 	$page->addMeta("title", htmlspecialchars($asset->name, ENT_QUOTES));

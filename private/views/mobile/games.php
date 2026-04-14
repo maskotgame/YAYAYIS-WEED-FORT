@@ -3,11 +3,11 @@
 	<head>
 		<link rel="stylesheet" href="/public/css/new/main.css">
 		<link rel="stylesheet" href="/public/css/new/forms.css">
-		<link rel="stylesheet" href="/public/css/new/stuff.css?v=1">
+		<link rel="stylesheet" href="/public/css/new/stuff.css?v=2">
 		<title>Games - ANORRL</title>
 		<link rel="icon" type="image/x-icon" href="/favicon.ico">
 		<script src="/public/js/core/jquery.js"></script>
-		<script src="/public/js/main.js?t=1776011774"></script>
+		<script src="/public/js/main.js?t=1776186351"></script>
 		<script src="/public/js/games.js?t=1776011774"></script>
 		<script>
 			ANORRL.Games.MobileEnabled = true;

@@ -56,7 +56,7 @@
 
 	$page = new Page($get_user->id == $user->id ? "Your Profile" : "{$get_user->name}'s Profile");
 
-	$page->addStylesheet("/css/new/stuff.css?v=1");
+	$page->addStylesheet("/css/new/stuff.css?v=2");
 	$page->addStylesheet("/css/new/comments.css");
 	$page->addStylesheet("/css/new/my/profile.css?v=13");
 	$page->addStylesheet("/users/{$get_user->id}/css?t=".time());

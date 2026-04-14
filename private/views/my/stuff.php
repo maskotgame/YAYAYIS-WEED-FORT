@@ -2,7 +2,7 @@
 	use anorrl\Page;
 
 	$page = new Page("Your Stuff", "my/stuff");
-	$page->addStylesheet("/css/new/stuff.css?v=1");
+	$page->addStylesheet("/css/new/stuff.css?v=2");
 	$page->addStylesheet("/css/new/forms.css");
 	$page->addScript("/js/stuff.js?t=1776011774");
 	$page->loadHeader();
