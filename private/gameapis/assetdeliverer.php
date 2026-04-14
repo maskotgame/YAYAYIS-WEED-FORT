@@ -116,7 +116,7 @@
 				
 				if($mimetype == "application/gzip") {
 					$output = gzdecode($output);
-					$mimetype = checkMimeType($contents);
+					$mimetype = checkMimeType($output);
 				}
 				
 				if(str_contains($mimetype, "json")) {
@@ -139,6 +139,7 @@
 						$mesh_result = MeshConverter::Convert($contents);
 						if(!$mesh_result['error'])
 							$contents = $mesh_result['mesh'];
+						// todo: do something with $mesh_result['reason']
 
 					if(!isset($_GET['version'])) {
 						file_put_contents($_SERVER['DOCUMENT_ROOT']."/../assets/rbx_".$id, $contents);
