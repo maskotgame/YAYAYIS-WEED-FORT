@@ -160,7 +160,7 @@
 			}
 		}
 
-		die(header("Location: {$asset->getUrl()}"));
+		die(header("Location: /{$asset->getUrl()}"));
 		
 	} else if(isset($_FILES['ANORRL$PublishAsset$File']) &&
 	   isset($_POST['ANORRL$PublishAsset$Submit'])) {
@@ -174,7 +174,7 @@
 
 				die(header("Location: /edit?id=$id"));
 			} else {
-				die(header("Location: {$asset->getUrl()}"));
+				die(header("Location: /{$asset->getUrl()}"));
 			}
 		} else {
 			die("Yo, what are you doing??");

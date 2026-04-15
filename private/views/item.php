@@ -18,7 +18,7 @@
 	if($asset != null) {
 
 		if($asset->getURLTitle() != $name) {
-			die(header("Location: {$asset->getUrl()}"));
+			die(header("Location: /{$asset->getUrl()}"));
 		}
 
 		if($asset->type == AssetType::AUDIO) {
@@ -51,7 +51,7 @@
 					$_SESSION['ANORRL$Comment$Post$Error'] = $result['reason'];
 				}
 
-				die(header("Location: {$asset->getUrl()}"));
+				die(header("Location: /{$asset->getUrl()}"));
 			}
 
 			$comments = Comment::GetCommentsOn($asset);

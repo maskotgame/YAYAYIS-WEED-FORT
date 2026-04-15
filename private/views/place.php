@@ -17,7 +17,7 @@
 	if($asset != null) {
 		
 		if($asset->getURLTitle() != $name) {
-			die(header("Location: {$asset->getUrl()}"));
+			die(header("Location: /{$asset->getUrl()}"));
 		}
 
 		if($user != null) {
@@ -36,7 +36,7 @@
 					$_SESSION['ANORRL$Comment$Post$Error'] = $result['reason'];
 				}
 
-				die(header("Location: {$asset->getUrl()}"));
+				die(header("Location: /{$asset->getUrl()}"));
 			}
 
 			$comments = Comment::GetCommentsOn($asset);
@@ -60,7 +60,7 @@
 		if($new_asset == null) {
 			die(header("Location: /my/stuff"));
 		} else {
-			die(header("Location: {$new_asset->getUrl()}"));
+			die(header("Location: /{$new_asset->getUrl()}"));
 		}
 	}
 	$header_data = $asset;
