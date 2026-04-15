@@ -51,7 +51,7 @@
 					}
 
 					if($error) {
-						if(!($_SERVER['HTTP_USER_AGENT'] == "ANORRL/WinInet" || $_SERVER['HTTP_USER_AGENT'] == "ANORRL/WinHttp"))
+						if(!($_SERVER['HTTP_USER_AGENT'] == "ANORRL/WinInet" || $_SERVER['HTTP_USER_AGENT'] == "Roblox/WinHttp"))
 							die(http_response_code(503));
 					}
 				}
