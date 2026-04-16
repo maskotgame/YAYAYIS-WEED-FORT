@@ -25,11 +25,12 @@
 
 			$this->location = $config_location[0];
 			$this->port = intval($config_location[1]);
-			$this->token = hash("sha256", \CONFIG->arbiter->token);
+			$this->token = strtoupper(hash("sha256", \CONFIG->arbiter->token));
 		}
 
 		public function request(string $endpoint, array $data = []): Object|null {
 			$ch = curl_init("http://{$this->location}:{$this->port}{$this->api_prefix}$endpoint");
+			error_log("http://{$this->location}:{$this->port}{$this->api_prefix}$endpoint");
 
 			curl_setopt_array($ch, [
 				CURLOPT_RETURNTRANSFER => true,

@@ -32,9 +32,8 @@
 		}
 	}
 
-	$message = "You are not authorised to use this.";
-		
-	
+	if(!isset($message))
+		$message = "You are not authorised to use this.";
 
 	die($message);
 ?>
