@@ -34,7 +34,7 @@
 				$endpoint = substr($endpoint, 1);
 				
 			$ch = curl_init("http://{$this->location}:{$this->port}{$this->api_prefix}$endpoint");
-			
+
 			curl_setopt_array($ch, [
 				CURLOPT_RETURNTRANSFER => true,
 				CURLOPT_POST => $post,
@@ -105,7 +105,7 @@
 			if(!$job)
 				return null;
 
-			$place = Place::FromID(intval($job->PlaceId));
+			$place = Place::FromID(intval($job->placeId));
 
 			if(!$place || ($place && $place->creator->isBanned()))
 				return null;
