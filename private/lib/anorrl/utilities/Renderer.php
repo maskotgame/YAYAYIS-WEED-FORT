@@ -61,7 +61,7 @@
 				return null;
 			}
 
-			$data = Arbiter::singleton()->request("/api/v1/mesh-render", ["MeshId" => $id]);
+			$data = Arbiter::singleton()->request("mesh-render", ["MeshId" => $id]);
 
 			if(!$data) {
 				return null;
@@ -76,7 +76,7 @@
 				return null;
 			}
 
-			$data = Arbiter::singleton()->request("/api/v1/place-render", ["PlaceId" => $id]);
+			$data = Arbiter::singleton()->request("place-render", ["PlaceId" => $id]);
 
 			if(!$data) {
 				return null;
@@ -91,7 +91,7 @@
 				return null;
 			}
 
-			$data = Arbiter::singleton()->request("/api/v1/model-render", ["AssetId" => $id]);
+			$data = Arbiter::singleton()->request("model-render", ["AssetId" => $id]);
 
 			if(!$data) {
 				return null;
