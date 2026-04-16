@@ -66,6 +66,41 @@
 			return $json;
 		}
 
+		public function requestGET(string $endpoint): Object|null {
+			if(str_starts_with($endpoint, "/"))
+				$endpoint = substr($endpoint, 1);
+				
+			$ch = curl_init("http://{$this->location}:{$this->port}{$this->api_prefix}$endpoint");
+
+			error_log("http://{$this->location}:{$this->port}{$this->api_prefix}$endpoint");
+			
+			curl_setopt_array($ch, [
+				CURLOPT_RETURNTRANSFER => true,
+				CURLOPT_HTTPHEADER => [
+					"Authorization: Bearer {$this->token}",
+					"Content-Type: application/json",
+					"User-Agent: ANORRL/1.0"
+				],
+				CURLOPT_TIMEOUT => $this->timeout
+			]);
+
+			$response = curl_exec($ch);
+
+			error_log($response === false ? "response failed" : "response worked");
+
+			if ($response === false)
+				return null;
+			
+			error_log($response . " code: " . (curl_getinfo($ch,CURLINFO_HTTP_CODE)));
+
+			$json = json_decode($response);
+
+			if (!$json)
+				return null;
+
+			return $json;
+		}
+
 		public function getAllJobs(int $size = 50): array {
 			$jobs = $this->request("getalljobs?limit=$size");
 
@@ -77,7 +112,7 @@
 
 		public function getGSMJob(string $jobid): GSMJob|null {
 
-			$job = $this->request("job/$jobid", [], false);
+			$job = $this->requestGET("job/$jobid");
 			ob_clean();
 			print_r($job);
 			error_log(ob_get_clean());
