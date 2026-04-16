@@ -147,6 +147,7 @@
 	route_api('GET|POST', 'gameservers/close');
 	route_api('GET|POST', 'gameservers/removeplayer');
 	route_api('GET|POST', 'gameservers/validateplayer');
+	route_api('GET|POST', 'gameservers/renewlease');
 
 	// game apis
 	route('GET',      '/asset/', '/private/gameapis/assetdeliverer.php');

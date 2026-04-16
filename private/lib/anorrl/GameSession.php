@@ -15,6 +15,32 @@
 		public \DateTime $time_started;
 
 		public static function Get(string $id, bool $teamcreate = false): self|null {
+			$row = Database::singleton()->run(
+				"SELECT * FROM `active_players` WHERE `id` = ? AND `teamcreate` = ?",
+				[
+					":id" => $id,
+					":teamcreate" => $teamcreate
+				]
+			)->fetch(\PDO::FETCH_OBJ);
+
+			if($row)
+				return new self($row);
+
+			return null;
+		}
+
+		public static function GetPlayerInServer(int $id, string $serverID): self|null {
+			$row = Database::singleton()->run(
+				"SELECT * FROM `active_players` WHERE `playerid` = ? AND `serverid` = ?",
+				[
+					":playerid" => $id,
+					":serverid" => $serverID
+				]
+			)->fetch(\PDO::FETCH_OBJ);
+
+			if($row)
+				return new self($row);
+
 			return null;
 		}
 

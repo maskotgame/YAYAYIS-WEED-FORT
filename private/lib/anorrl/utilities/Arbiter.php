@@ -2,6 +2,7 @@
 	namespace anorrl\utilities;
 
 	use anorrl\GSMJob;
+	use anorrl\Place;
 
 	class Arbiter {
 
@@ -75,9 +76,21 @@
 			if(!$job)
 				return null;
 
-			// process shit in here i guess
+			$place = Place::FromID(intval($job->PlaceId));
 
-			return null;
+			if(!$place || ($place && $place->creator->isBanned()))
+				return null;
+			
+			// cba!
+			return new GSMJob(
+				$job->JobId,
+				$job->Port,
+				$job->PlaceId,
+				$job->Pid,
+				new \DateTime(),
+				new \DateTime(),
+				$job->Alive
+			);
 		}
 
 	}

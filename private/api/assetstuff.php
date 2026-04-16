@@ -1,19 +1,7 @@
 <?php
-
-	// REMOVE THIS AND LIKE KILL EVERYONE
-
-	include $_SERVER["DOCUMENT_ROOT"]."/private/connection.php";
-	
-	use anorrl\utilities\Renderer;
-	use anorrl\enums\AssetType;
 	use anorrl\Asset;
-	use anorrl\AssetVersion;
 
 	$user = SESSION ? SESSION->user : null;
-	
-	$directory = $_SERVER['DOCUMENT_ROOT'];
-	$assetsdir = "$directory/../assets/";
-
 	
 	if(isset($_POST['type'])) {
 		if(isset($_POST['id'])) {

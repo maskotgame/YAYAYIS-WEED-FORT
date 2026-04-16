@@ -131,7 +131,7 @@
 							"icon_url" => "https://$domain/images/download/2016client.png"
 						],
 						"thumbnail" => [
-							"url" => "https://$domain".$asset->getThumbsUrl()
+							"url" => "https://$domain{$asset->getThumbsUrl()}"
 						],
 					]
 				]
