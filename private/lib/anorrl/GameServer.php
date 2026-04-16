@@ -18,7 +18,7 @@
 
 		public static function Get(string $id, bool $teamcreate = false): self|null {
 			$row = Database::singleton()->run(
-				"SELECT * FROM `active_players` WHERE `id` = :id AND `teamcreate` = :teamcreate",
+				"SELECT * FROM `active_servers` WHERE `id` = :id AND `teamcreate` = :teamcreate",
 				[
 					":id" => $id,
 					":teamcreate" => $teamcreate
@@ -33,7 +33,7 @@
 
 		public static function GetFromJobID(string $jobid): self|null {
 			$row = Database::singleton()->run(
-				"SELECT * FROM `active_players` WHERE `jobid` = :jobid",
+				"SELECT * FROM `active_servers` WHERE `jobid` = :jobid",
 				[
 					":jobid" => $jobid,
 				]
