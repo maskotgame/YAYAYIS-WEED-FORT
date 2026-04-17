@@ -301,7 +301,7 @@
 
 			$gameserver = new GameServer($row);
 
-			return $gameserver->active() && !$gameserver->isPlayerInServer($user) ? $gameserver : $user;
+			return $gameserver->active() && !$gameserver->isPlayerInServer($user) ? $gameserver : null;
 		}
 		
 
