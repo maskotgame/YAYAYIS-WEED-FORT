@@ -105,20 +105,20 @@
 			if(!$job)
 				return null;
 
-			$place = Place::FromID(intval($job->placeId));
+			$place = Place::FromID(intval($job->PlaceId));
 
 			if(!$place || ($place && $place->creator->isBanned()))
 				return null;
 			
 			// cba!
 			return new GSMJob(
-				$job->jobId,
-				$job->port,
-				$job->placeId,
-				$job->pid,
+				$job->JobId,
+				$job->Port,
+				$job->PlaceId,
+				$job->Pid,
 				new \DateTime(),
 				new \DateTime(),
-				$job->alive
+				$job->Alive
 			);
 		}
 
