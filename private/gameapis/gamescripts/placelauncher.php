@@ -225,4 +225,5 @@
 	}
 
 	errorOut();
+	error_log("never made contact");
 ?>
