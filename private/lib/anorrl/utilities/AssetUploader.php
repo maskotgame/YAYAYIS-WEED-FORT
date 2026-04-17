@@ -21,18 +21,18 @@
 		 * @return string|null null if nothing is wrong, string for a generated "Please wait [X] seconds" message
 		 */
 		private static function CanUpload(User $user): string|null {
-			$timer = 61;
+			$timer = 31;
 			if($user->getLatestAssetUploaded() != null) {
 				$difference = (time()-($user->getLatestAssetUploaded()->created_at->getTimestamp()-3600));
 
 				$timer = $difference;
 			}
 
-			if($timer > 60) {
+			if($timer > 30) {
 				return null;
 			}
 			
-			$timercalc = 60 - $timer;
+			$timercalc = 30 - $timer;
 			return "You're uploading way too fast! Wait $timercalc more seconds before uploading!";
 		}
 
