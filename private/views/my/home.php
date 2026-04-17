@@ -122,11 +122,11 @@
 							<?php foreach($recentlyplayed as $recentlyplayedplace): ?>
 							<div class="Game">
 								<a href="/game/<?= $recentlyplayedplace->id ?>" title="<?= $recentlyplayedplace->name ?>">
-									<img src="/public/images/review-pending.png">
+									<img src="<?= $recentlyplayedplace->getThumbsUrl(180, 101) ?>">
 									<span id="Name"><?= $recentlyplayedplace->name ?></span>
 								</a>
 								<div id="Stats">
-									<div id="OnlinePlayers">Couple ppl online</div>
+									<div id="OnlinePlayers"><?= $recentlyplayedplace->current_playing_count ?></div>
 									<div id="Created">Creator: <a href="/users/<?= $recentlyplayedplace->creator->id ?>/profile"><?= $recentlyplayedplace->creator->name ?></a></div>
 								</div>
 							</div>
