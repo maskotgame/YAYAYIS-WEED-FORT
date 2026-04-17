@@ -1,16 +1,14 @@
 <?php
 	use anorrl\GameServer;
-	use anorrl\utilities\ClientDetector;
 
-	if(!ClientDetector::HasAccess())
-		exit(http_response_code(500));
+	if(isset($_GET['access']) && isset($_GET['jobID'])) {
+		if($_GET['access'] == CONFIG->asset->key) {
+			$gameserver = GameServer::GetFromJobID($_GET['jobID']);
 
-	if(isset($_GET['jobID'])) {
-		$gameserver = GameServer::GetFromJobID($_GET['jobID']);
-
-		if($gameserver) {
-			$gameserver->renewLease();
-			die();
+			if($gameserver) {
+				$gameserver->renewLease();
+				die();
+			}
 		}
 	}
 	http_response_code(503);

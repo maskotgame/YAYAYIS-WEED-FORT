@@ -1,20 +1,18 @@
 <?php
 	use anorrl\GameServer;
 	use anorrl\User;
-	use anorrl\utilities\ClientDetector;
+	
+	if(isset($_GET['access']) && isset($_GET['jobID']) && isset($_GET['userID'])) {
+		if($_GET['access'] == CONFIG->asset->key) {
+			$gameserver = GameServer::GetFromJobID($_GET['jobID']);
 
-	if(!ClientDetector::HasAccess())
-		exit(http_response_code(500));
+			$user = User::FromID(intval($_GET['userID']));
 
-	if(isset($_GET['jobID']) && isset($_GET['userID'])) {
-		$gameserver = GameServer::GetFromJobID($_GET['jobID']);
+			if($gameserver != null && $user && !$user->isBanned()) {
+				$gameserver->addPlayer($user);
 
-		$user = User::FromID(intval($_GET['userID']));
-
-		if($gameserver != null && $user && !$user->isBanned()) {
-			$gameserver->addPlayer($user);
-
-			die("OK");
+				die("OK");
+			}
 		}
 	}
 	http_response_code(503);
