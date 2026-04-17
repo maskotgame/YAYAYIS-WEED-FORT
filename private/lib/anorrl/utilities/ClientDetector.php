@@ -10,5 +10,10 @@
 				str_contains(strtolower($_SERVER['HTTP_USER_AGENT']), "anorrl/winhttp");
 		}
 
+		public static function HasAccess(): bool {
+			$REQaccessKey = $_SERVER["HTTP_ACCESSKEY"] ?? null;
+			return !($REQaccessKey !== \CONFIG->asset->key);
+		}
+
 	}
 ?>

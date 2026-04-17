@@ -1,16 +1,17 @@
 <?php
 	use anorrl\GameServer;
 
-	$access = CONFIG->asset->key;
+	use anorrl\utilities\ClientDetector;
 
-	if(isset($_GET['access']) && isset($_GET['jobID'])) {
-		if($_GET['access'] == $access) {
-			$gameserver = GameServer::GetFromJobID($_GET['jobID']);
+	if(!ClientDetector::HasAccess())
+		exit(http_response_code(500));
 
-			if($gameserver) {
-				$gameserver->destroy();
-				die();
-			}
+	if(isset($_GET['jobID'])) {
+		$gameserver = GameServer::GetFromJobID($_GET['jobID']);
+
+		if($gameserver) {
+			$gameserver->destroy();
+			die();
 		}
 	}
 

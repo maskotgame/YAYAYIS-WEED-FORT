@@ -63,7 +63,7 @@
 		$file = "/private/api/$path.php";
 
 		$router->map($method, "/api/$path", function(...$params) use ($path, $file) {
-			if(SESSION || str_starts_with($path, "gameserver")) {
+			if(SESSION || (str_starts_with($path, "gameserver") && str_ends_with($path,"/get"))) {
 				foreach ($params as $key => $value) {
 					$$key = $value;
 				}
@@ -146,6 +146,7 @@
 	route_api('GET|POST', 'gameservers/removeplayer');
 	route_api('GET|POST', 'gameservers/validateplayer');
 	route_api('GET|POST', 'gameservers/renewlease');
+	route_api('GET',      'gameservers/get');
 
 	route_api('GET|POST', 'asset/render');
 	route_api('GET|POST', 'asset/delete');

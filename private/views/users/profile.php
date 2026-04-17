@@ -1,5 +1,6 @@
 <?php
 	use anorrl\User;
+	use anorrl\UserSettings;
 	use anorrl\utilities\UserUtils;
 	use anorrl\enums\AssetType;
 	use anorrl\enums\ANORRLBadge;
@@ -24,10 +25,6 @@
 		die(header("Location: /my/home"));
 	}
 
-	if(isset($_GET['redirect']) && $_GET['redirect'] == "true") {
-		die(header("Location: /users/".$get_user->id."/profile"));
-	}
-
 	$user = SESSION->user;
 
 	$header_data = $get_user;
@@ -49,7 +46,7 @@
 
 	$comments = Comment::GetCommentsOn($get_user);
 	$comments_count = count($comments);
-    $bgm = SESSION->settings->background_music;
+    $bgm = $get_user->getSettings()->background_music;
 	if($bgm && !$bgm->isUsable()) {
 		$bgm = null;
 	}
@@ -61,7 +58,7 @@
 	$page->addStylesheet("/css/new/my/profile.css?v=14");
 	$page->addStylesheet("/users/{$get_user->id}/css?t=".time());
 
-	$page->addScript("/js/placelauncher.js?t=1776011774");
+	$page->addScript("/js/placelauncher.js?t=1776434501");
 	$page->addScript("/js/user.js?t=1776011774");
 
 	$page->loadHeader();

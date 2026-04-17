@@ -1263,5 +1263,54 @@
 				);
 			}
 		}
+
+		function getActiveGame(bool $teamcreate = false) {
+			if(!$this->isInAGame())
+				return null;
+
+			$rows = Database::singleton()->run(
+				"SELECT `serverid` FROM `active_players` WHERE `playerid` = ? AND `status` = 1 AND `teamcreate` = :teamcreate", 
+				[
+					":playerid" => $this->id,
+					":teamcreate" => $teamcreate
+				]
+			)->fetchAll(\PDO::FETCH_OBJ);
+
+			$server = null;
+
+			foreach($rows as $row) {
+				$grab_server = GameServer::Get($row->serverid);
+
+				if($grab_server->active()) {
+					if(!$server) {
+						$server = $grab_server;
+					} else {
+						$server->removePlayer($this);
+						$server = null;
+						$grab_server->removePlayer($this);
+					}
+				}
+				else {
+					$grab_server->destroy();
+				}
+			}
+
+			return $server->active() ? $server : null;
+		}
+
+		function isInAGame(bool $teamcreate = false) {
+			return 
+				Database::singleton()->run(
+					"SELECT * FROM `active_players` WHERE `playerid` = ? AND `status` = 1 AND `teamcreate` = :teamcreate", 
+					[
+						":playerid" => $this->id,
+						":teamcreate" => $teamcreate
+					]
+				)->rowCount() != 0;
+		}
+
+		function getSettings(): UserSettings {
+			return UserSettings::Get($this);
+		}
 	}
 ?>

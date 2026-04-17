@@ -136,7 +136,7 @@
 				</div>
 			</div>
 			<?php endif ?>
-			<textarea name="ANORRL$Update$Profile$BGM" style="height:16px;resize:none;margin-top: 0px;text-align: center"><?= $bgm ? SESSION->settings->background_music : "" ?></textarea>
+			<textarea name="ANORRL$Update$Profile$BGM" style="height:16px;resize:none;margin-top: 0px;text-align: center"><?= $bgm ? $bgm->id : "" ?></textarea>
 			<input type="submit" value="Update" name="ANORRL$Update$Profile$BGM$Submit">
 		</div>
 	</div>

@@ -24,7 +24,7 @@
 					die(header("Location: /api/user?id=$id&request=getuserbadges&p=1"));
 				}
 				
-				$badges = $user->getOwnedAssets(AssetType::BADGE,"", false, true, [], $page, 12);
+				$badges = $user->getOwnedAssets(AssetType::BADGE, "", false, true, [], $page, 12);
 				$badges_raw = [];
 		
 				if(count($badges) != 0) {

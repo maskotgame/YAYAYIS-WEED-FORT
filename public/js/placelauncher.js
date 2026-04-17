@@ -49,7 +49,7 @@ ANORRL.PlaceLauncher  = {
 	},
 
 	EditPlace: function(placeId) {
-		$.post("/api/ticketer", {editID: placeId, }, function(data) {
+		$.post("/api/ticketer", {editID: placeId}, function(data) {
 			if(data == "") {
 				alert("You need to be logged in to play!");
 				return;
@@ -121,7 +121,7 @@ ANORRL.PlaceLauncher  = {
 			}
 		});
 
-		$.get("/api/gameservers", {placeId: placeid}, function(data) {
+		$.get("/api/gameservers/get", {placeId: placeid}, function(data) {
 			
 			var servers = data;
 

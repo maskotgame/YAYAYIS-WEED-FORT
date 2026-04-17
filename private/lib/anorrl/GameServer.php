@@ -16,6 +16,18 @@
 		public int $port;
 		public bool $teamcreate;
 
+		private static function GetRandomString(): string {
+			$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+			$randomString = '';
+			
+			for ($i = 0; $i < 11; $i++) {
+				$index = rand(0, strlen($characters) - 1);
+				$randomString .= $characters[$index];
+			}
+
+			return $randomString;
+		}
+
 		public static function Get(string $id, bool $teamcreate = false): self|null {
 			$row = Database::singleton()->run(
 				"SELECT * FROM `active_servers` WHERE `id` = :id AND `teamcreate` = :teamcreate",
@@ -45,6 +57,25 @@
 			return null;
 		}
 
+		public static function Create(string $jobID, Place $place, int $port, int $pid, bool $teamcreate = false): self|null {
+			$id = self::GetRandomString();
+
+			Database::singleton()->run(
+				"INSERT INTO `active_servers` (`id`, `jobid`, `placeid`, `maxcount`, `port`, `pid`, `teamcreate`) VALUES (:id, :jobid, :placeid, :maxcount, :port, :pid, :teamcreate)",
+				[
+					":id" => $id,
+					":jobid" => $jobID,
+					":placeid" => $place->id,
+					":maxcount" => $place->server_size,
+					":port" => $port,
+					":pid" => $pid,
+					":teamcreate" => $teamcreate
+				]
+			);
+			
+			return self::Get($id);
+		}
+
 		function __construct(Object $rowdata) {
 			$this->id = $rowdata->id;
 			$this->pid = $rowdata->pid;
@@ -70,10 +101,27 @@
 			// make new api endpoint on anrsal or something
 		}
 
-		function getPlayers(): array {
+		function getSessions(): array {
 			if(!$this->active()) { $this->destroy(); return []; }
 
-			return [];
+			$rows = Database::singleton()->run(
+				"SELECT * FROM `active_players` WHERE `serverid` = :id AND `status` = 1 AND `teamcreate` = :teamcreate;",
+				[
+					":id" => $this->id,
+					":teamcreate" => $this->teamcreate
+				]
+			)->fetchAll(\PDO::FETCH_OBJ);
+
+			$sessions = [];
+
+			foreach($rows as $row) {
+				$session = new GameSession($row);
+
+				if($session->player)
+					$sessions[] = $session;
+			}
+
+			return $sessions;
 		}
 
 		function isPlayerInServer(User|int $user): bool {
@@ -96,20 +144,17 @@
 			);
 		}
 
-		function removePlayer(User|int $user) {
+		function removePlayer(User|int $user, string|null $reason = null) {
 			if(!$this->active()) { $this->destroy(); return; }
 
 			if(!$this->isPlayerInServer($user)) return;
 
 			$userid = is_int($user) ? $user : $user->id;
 
-			Database::singleton()->run(
-				"DELETE FROM `active_players` WHERE `serverid` = :id AND `playerid` = :playerid",
-				[
-					":id" => $this->id,
-					":playerid" => $userid
-				]
-			);
+			$session = GameSession::GetPlayerInServer($userid, $this->id);
+
+			if($session)
+				$session->kick($reason ?? '');
 		}
 
 		function renewLease(int $time = 35) {

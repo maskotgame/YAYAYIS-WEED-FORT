@@ -8,6 +8,7 @@
 	use anorrl\enums\ANORRLBadge;
 	use anorrl\utilities\AssetUtils;
 	use anorrl\utilities\Arbiter;
+	use anorrl\GameServer;
 
 	class Place extends Asset {
 		/** is the same as Asset::public */
@@ -246,6 +247,63 @@
 				}
 			}
 		}
+
+		function getServers(bool $teamcreate = false, bool $active = true): array {
+			$rows = Database::singleton()->run(
+				"SELECT * FROM `active_servers` WHERE `placeid` = :placeid AND `teamcreate` = :teamcreate",
+				[
+					":placeid" => $this->id,
+					":teamcreate" => $teamcreate
+				]
+			)->fetchAll(\PDO::FETCH_OBJ);
+
+			$result = [];
+
+			foreach($rows as $row) {
+				$server = new GameServer($row);
+
+				if($server->active())
+					$result[] = $server;
+			}
+
+			return $result;
+		}
+
+		function isEditable(User $user): bool {
+			return 
+				$user->id == $this->creator->id ||
+				!$this->copylocked ||
+				($this->teamcreate_enabled && $this->isCloudEditor($user)) ||
+				$user->isAdmin();
+		}
+
+		function anyActiveServers(bool $teamcreate = false): bool {
+			return Database::singleton()->run(
+				"SELECT * FROM `active_servers` WHERE `placeid` = :placeid AND `playercount` != `maxcount` AND `teamcreate` = :teamcreate",
+				[
+					":placeid" => $this->id,
+					":teamcreate" => $teamcreate
+				]
+			)->rowCount() != 0;
+		}
+
+		function getAnActiveServer(User $user, bool $teamcreate = false): GameServer|null {
+			$row = Database::singleton()->run(
+				"SELECT * FROM `active_servers` WHERE `placeid` = :placeid AND `playercount` < `maxcount` AND `teamcreate` = :teamcreate",
+				[
+					":placeid" => $this->id,
+					":teamcreate" => $teamcreate
+				]
+			)->fetch(\PDO::FETCH_OBJ);
+
+			if(!$row)
+				return null;
+
+			$gameserver = new GameServer($row);
+
+			return $gameserver->active() && !$gameserver->isPlayerInServer($user) ? $gameserver : $user;
+		}
+		
 
 		function getBadges(): array {
 			return [];
