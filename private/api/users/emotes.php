@@ -4,8 +4,13 @@
 
 	header("Content-Type: application/json");
 
+	$userid = 1;
+
 	if(isset($_GET['userId'])) {
 		$userid = intval($_GET['userId']);
+	} else {
+		if(SESSION)
+			$userid = SESSION->user->id;
 	}
 
 	$user = User::FromID($userid);
