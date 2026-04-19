@@ -27,12 +27,10 @@
 
 	$emotes = [];
 
-	foreach($user->getOwnedAssets(AssetType::EMOTE) as $emote) {
+	foreach($user->getWearing(AssetType::EMOTE) as $emote) {
 		$emotes[] = [
 			"id" => $emote->id,
 			"name" => $emote->name,
-			"version" => $emote->current_version,
-			"versionid" => $emote->getLatestVersionDetails()->id,
 		];
 	}
 

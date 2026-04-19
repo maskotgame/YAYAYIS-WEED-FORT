@@ -264,24 +264,21 @@
 					die(json_encode($user->takeOff($asset)));
 				}				
 			} else if($request == "getwearing") {
-				$wearing_array = $user->getWearingArray();
+				$items = $user->getWearing();
 
 				$assets = [];
 
-				if(count($wearing_array) != 0) {
-					foreach($wearing_array as $assetid) {
-						$asset = Asset::FromID($assetid);
-						if($asset != null && $asset instanceof anorrl\Asset) {
-							$assets[] = [
-								"id" => $asset->id,
-								"name" => $asset->name,
-								"creator" => [
-									"id" => $asset->creator->id,
-									"name" => $asset->creator->name
-								],
-								"thumbnail" => $asset->getThumbsUrl(130)
-							];
-						}
+				foreach($items as $asset) {
+					if($asset instanceof anorrl\Asset) {
+						$assets[] = [
+							"id" => $asset->id,
+							"name" => $asset->name,
+							"creator" => [
+								"id" => $asset->creator->id,
+								"name" => $asset->creator->name
+							],
+							"thumbnail" => $asset->getThumbsUrl(130)
+						];
 					}
 				}
 

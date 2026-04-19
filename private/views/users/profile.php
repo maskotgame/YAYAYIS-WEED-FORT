@@ -301,12 +301,9 @@ $(function() {
 				<?= $get_user->name ?> does not have any items on!
 			</div>
 		</li>
-		<?php else: ?>
-		<?php 
-			$items = $get_user->getWearingArray();
-			foreach($items as $item) {
-				$asset = Asset::FromID($item);
-
+		<?php else:
+			$items = $get_user->getWearing();
+			foreach($items as $asset) {
 				if($asset instanceof anorrl\Asset) {
 					echo <<<EOT
 					<li>

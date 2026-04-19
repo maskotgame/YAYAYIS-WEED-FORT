@@ -599,46 +599,73 @@
 				return ["error"=>true, "reason"=>"Invalid item"];
 			}
 
-			include $_SERVER["DOCUMENT_ROOT"]."/private/connection.php";
+			$db = Database::singleton();
 
 			if($this->isWearing($asset)) {
 				return ["error" => false];
 			} else {
 				$item = Asset::FromID($assetid);
-				$assettype = $item->type->ordinal();
-				
+
 				if($item->type->wearable()) {
 					if($item->type->wearone()) {
-						$stmt_checkinventory = $con->prepare("SELECT * FROM `inventory` WHERE `userid` = ? AND `assettype` = ?;");
-						$stmt_checkinventory->bind_param('ii', $this->id, $assettype);
-						$stmt_checkinventory->execute();
+						$is_wearing_type = $db->run(
+							"SELECT * FROM `inventory` WHERE `userid` = :userid AND `assettype` = :assetype",
+							[
+								":userid" => $this->id,
+								":assettype" => $item->type->ordinal()
+							]
+						)->rowCount() != 0;
 
-						if($stmt_checkinventory->get_result()->num_rows == 0) {
-							$stmt_additem = $con->prepare("INSERT INTO `inventory`(`userid`, `assetid`, `assettype`) VALUES (?, ?, ?)");
-							$assettype = $item->type->ordinal();
-							$stmt_additem->bind_param('iii', $this->id, $assetid, $assettype);
-							$stmt_additem->execute();
+						if(!$is_wearing_type) {
+							$db->run(
+								"INSERT INTO `inventory`(`userid`, `assetid`, `assettype`) VALUES (:userid, :assetid, :assettype)",
+								[
+									":userid" => $this->id,
+									":assetid" => $item->id,
+									":assettype" => $item->type->ordinal()
+								]
+							);
+
 						} else {
-							$stmt_replaceitem = $con->prepare("UPDATE `inventory` SET `assetid` = ? WHERE `userid` = ? AND `assettype` = ?");
-							$stmt_replaceitem->bind_param('iii', $assetid, $this->id, $assettype);
-							$stmt_replaceitem->execute();
+							$db->run(
+								"UPDATE `inventory` SET `assetid` = :assetid WHERE `userid` = :userid AND `assettype` = :assettype",
+								[
+									":userid" => $this->id,
+									":assetid" => $item->id,
+									":assettype" => $item->type->ordinal()
+								]
+							);
 						}
 					} else {
 						$limit = AssetTypeUtils::WearableLimit($item->type);
-						$stmt_checkinventory = $con->prepare("SELECT * FROM `inventory` WHERE `userid` = ? AND `assettype` = ?;");
-						$stmt_checkinventory->bind_param('ii', $this->id, $assettype);
-						$stmt_checkinventory->execute();
 
-						if($limit == -1 || $stmt_checkinventory->get_result()->num_rows < $limit) {
-							$stmt_additem = $con->prepare("INSERT INTO `inventory`(`userid`, `assetid`, `assettype`) VALUES (?, ?, ?)");
-							$assettype = $item->type->ordinal();
-							$stmt_additem->bind_param('iii', $this->id, $assetid, $assettype);
-							$stmt_additem->execute();
+						$limitless = $limit == -1;
+						$wearable = $limitless;
+
+						if(!$limitless) {
+							$item_count = $db->run(
+								"SELECT * FROM `inventory` WHERE `userid` = ? AND `assettype` = ?;",
+								[
+									":userid" => $this->id,
+									":assettype" => $item->type->ordinal()
+								]
+							)->rowCount();
+
+							$wearable = $item_count < $limit;
+						}
+
+						if($wearable) {
+							$db->run(
+								"INSERT INTO `inventory`(`userid`, `assetid`, `assettype`) VALUES (:userid, :assetid, :assettype)",
+								[
+									":userid" => $this->id,
+									":assetid" => $item->id,
+									":assettype" => $item->type->ordinal()
+								]
+							);
 						} else {
 							return ["error" => true, "reason" => "Too many fucking ".strtolower($item->type->label())."s on"];
 						}
-
-						
 					}
 				} else {
 					return ["error" => true, "reason" => "Invalid item"];
@@ -821,6 +848,33 @@
 			}	
 
 			return $ids;
+		}
+
+		function getWearing(AssetType|null $type = null): array {
+			$db = Database::singleton();
+			
+			if($type) {
+				$items = $db->run(
+					"SELECT DISTINCT `assetid` FROM `inventory` WHERE `userid` = :userid AND `assettype` = :assettype",
+					[
+						":userid" => $this->id,
+						":assettype" => $type->ordinal()
+					]
+				)->fetchAll(\PDO::FETCH_OBJ);
+			} else {
+				$items = $db->run(
+					"SELECT DISTINCT `assetid` FROM `inventory` WHERE `userid` = :userid",
+					[ ":userid" => $this->id ]
+				)->fetchAll(\PDO::FETCH_OBJ);
+			}
+			
+			$assets = [];
+
+			foreach($items as $item) {
+				$assets[] = Asset::FromID($item->assetid);
+			}
+
+			return $assets;
 		}
 
 		function getBodyColours() {
