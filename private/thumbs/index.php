@@ -33,6 +33,8 @@
 					$contents = file_get_contents($_SERVER['DOCUMENT_ROOT']."/public/images/script.png");
 				} else if($asset->type == AssetType::ANIMATION) {
 					$contents = file_get_contents($_SERVER['DOCUMENT_ROOT']."/public/images/animation.png");
+				} else if($asset->type == AssetType::EMOTE) {
+					$contents = file_get_contents($_SERVER['DOCUMENT_ROOT']."/public/images/emotes.png");
 				} else if($thumbsmd5hash == "placeholder" || !$asset->isUsable()) {
 					$contents = file_get_contents($_SERVER['DOCUMENT_ROOT']."/public/images/unavailable.png");
 				} else {
