@@ -20,7 +20,10 @@ use anorrl\User;
 
 			$render_image = imagecreatefromstring($data);
 			imagesavealpha($render_image, true);
-			imagepng($render_image, "$mediadir/$charactermd5.png");
+
+			$ext = $is3D ? ".png" : ".json";
+
+			imagepng($render_image, "$mediadir/$charactermd5$ext");
 
 			$user->updateOutfitHash();
 
