@@ -12,14 +12,15 @@ use anorrl\User;
 	function performRender(User $user, string $mediadir, string $charactermd5, bool $headshot = false, bool $is3D = false) {
 		$render = Renderer::RenderUser($user->id, false, $is3D);
 		if($render != null) {
-			$data = base64_decode($render);
+			
 
 			if(!$is3D) {
+				$data = base64_decode($render);
 				$render_image = imagecreatefromstring($data);
 				imagesavealpha($render_image, true);
 				imagepng($render_image, "$mediadir/$charactermd5.png");
 			} else {
-				file_put_contents("$mediadir/$charactermd5.json", $data);
+				file_put_contents("$mediadir/$charactermd5.json", $render);
 			}
 
 			$user->updateOutfitHash();
