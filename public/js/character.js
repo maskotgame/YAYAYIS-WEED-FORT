@@ -633,7 +633,7 @@ ANORRL.Character  = {
 		if(!this.Has3DEnabled())
 			return;
 
-		$("#ThumbnailSwitcher").attr("data-3d", false);
+		$("#ThumbnailSwitcher").attr("data-3d", true);
 
 		$(".thumbnail-holder > img ").css("display", "none");
 		$(".thumbnail-span").css("display", "block");
