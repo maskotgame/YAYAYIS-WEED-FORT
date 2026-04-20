@@ -312,7 +312,7 @@ THREE.MTLLoader.MaterialCreator.prototype = {
 
 					// Diffuse texture map
 
-					params['map'] = this.loadTexture(this.baseUrl +"avatar/img/"+ value);
+					params['map'] = this.loadTexture(this.baseUrl +"img/"+ value);
 					params['map'].wrapS = this.wrap;
 					params['map'].wrapT = this.wrap;
 
