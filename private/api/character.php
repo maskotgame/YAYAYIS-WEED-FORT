@@ -21,15 +21,15 @@ use anorrl\User;
 				imagepng($render_image, "$mediadir/$charactermd5.png");
 			} else {
 				$data = trim($render);
-				/*$data = str_replace("\"x\":\+", "\"x\":", $render);
+				$data = str_replace("\"x\":\+", "\"x\":", $render);
 				$data = str_replace("\"y\":\+", "\"y\":", $render);
 				$data = str_replace("\"z\":\+", "\"z\":", $render);
 
 				if(str_ends_with($data, "==")) {
 					$data = substr($data, 0, strlen($data)-2);
-				}*/
+				}
 
-				$data = base64_decode($render);
+				//$data = base64_decode($render, true);
 
 				file_put_contents("$mediadir/$charactermd5.json", $data);
 			}
