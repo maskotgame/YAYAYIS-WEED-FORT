@@ -107,6 +107,24 @@
 	$linktype = strtolower($asset->type->label());
 	$plural_linktype = !str_ends_with($linktype, "s") ? $linktype."s" : $linktype;
 ?>
+<script src="/public/js/3D/ThumbnailView.js"></script>
+<script src="/public/js/3D/ThreeDeeThumbnails.js?v=3"></script>
+<script src="/public/js/3D/three.min.js"></script>
+<script src="/public/js/3D/MTLLoader.js?v=1"></script>
+<script src="/public/js/3D/OBJMTLLoader.js?v=1"></script>
+<script src="/public/js/3D/tween.js"></script>
+<script src="/public/js/3D/PolygonOrbitControls.js"></script>
+<script>
+	$(function() {
+		$(".thumbnail-span").load3DThumbnail("asset", function(canvas) {
+			console.log("3D: complete!");
+		}, function() {
+			console.log("3D: I dont like you");
+			$(".thumbnail-holder > img ").css("display", "block");
+			$(".thumbnail-span").css("display", "none");
+		});
+	})
+</script>
 <style>
 	h2, h3, h4 {
 		margin: 0;
@@ -224,7 +242,11 @@
 			<img src="<?= $asset->getThumbsUrl(190) ?>&nocompress">
 			<audio src="/asset/?id=<?= $audio_asset_id ?>" controls>Your browser does not support HTML5 Audio</audio>
 			<?php else: ?>
-			<img src="<?= $asset->getThumbsUrl(240) ?>&nocompress">
+			<!--<img src="<?= $asset->getThumbsUrl(240) ?>&nocompress">-->
+			<div class="thumbnail-holder" style="width: 240px; height: 240px; margin: 0 auto;">
+				<span class="thumbnail-span" data-3d-url="/thumbnail/get?assetid=<?= $asset->id ?>" style="width: 240px; height: 240px; display: block;"></span>
+				<img src="<?= $asset->getThumbsUrl(240) ?>&nocompress" style="display: none">
+			</div>
 			<?php endif ?>
 		</div>
 		<div id="Information">

@@ -129,8 +129,15 @@
 	route('GET', '/thumbnail/avatar/[*:hash]/mtl', '/private/api/thumbnail/avatar/getters/mtl.php');
 	route('GET', '/thumbnail/avatar/[*:hash]/obj', '/private/api/thumbnail/avatar/getters/obj.php');
 	route('GET', '/thumbnail/avatar/[*:hash]/img/[*:image]', '/private/api/thumbnail/avatar/getters/img.php');
-	route('GET', '/thumbnail/get', '/private/api/thumbnail/get.php');
 	route('GET', '/thumbnail/avatar/generate', '/private/api/thumbnail/avatar/generate.php');
+
+	route('GET', '/thumbnail/asset/[*:hash]/mtl', '/private/api/thumbnail/asset/getters/mtl.php');
+	route('GET', '/thumbnail/asset/[*:hash]/obj', '/private/api/thumbnail/asset/getters/obj.php');
+	route('GET', '/thumbnail/asset/[*:hash]/img/[*:image]', '/private/api/thumbnail/asset/getters/img.php');
+	route('GET', '/thumbnail/asset/generate', '/private/api/thumbnail/asset/generate.php');
+
+	route('GET', '/thumbnail/get', '/private/api/thumbnail/get.php');
+	
 	
 	// Apis!
 	route_api('GET|POST', 'catalog');

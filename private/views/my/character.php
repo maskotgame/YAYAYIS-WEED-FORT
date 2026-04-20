@@ -4,7 +4,7 @@
 	$page = new Page("Your Character", "my/character");
 	
 	$page->addScript("/js/core/jquery-modal.js");
-	$page->addScript("/js/character.js?t=1776662128");
+	$page->addScript("/js/character.js?t=1776691988");
 
 	$page->addStylesheet("/css/new/stuff.css?v=2");
 	$page->addStylesheet("/css/new/my/character.css");

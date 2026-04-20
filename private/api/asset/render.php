@@ -24,6 +24,7 @@
 	}
 
 	$asset->render();
+	$asset->render(true);
 
 	die(json_encode([
 		"error" => false

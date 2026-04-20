@@ -388,20 +388,20 @@
 			}
 		}
 
-		function render() {
+		function render(bool $is3D = false) {
 			include $_SERVER['DOCUMENT_ROOT']."/private/connection.php";
 
 			$id = $this->id;
 			$type = $this->type;
 
 			if($type == AssetType::SHIRT || $type == AssetType::PANTS) {
-				$render = Renderer::RenderClothing($id);	
+				$render = Renderer::RenderClothing($id, $is3D);	
 			} else if($type == AssetType::PLACE) {
 				$render = Renderer::RenderPlace($id);
 			} else if($type == AssetType::MESH) {
-				$render = Renderer::RenderMesh($id);
+				$render = Renderer::RenderMesh($id, $is3D);
 			} else if($type == AssetType::MODEL || $type == AssetType::HAT || $type == AssetType::GEAR) {
-				$render = Renderer::RenderModel($id);
+				$render = Renderer::RenderModel($id, $is3D);
 			} else if(
 				$type == AssetType::HEAD	 ||
 				$type == AssetType::TORSO	 ||
@@ -410,15 +410,31 @@
 				$type == AssetType::LEFTLEG	 ||
 				$type == AssetType::RIGHTLEG
 			) {
-				$render = Renderer::RenderClothing($id);
+				$render = Renderer::RenderClothing($id, $is3D);
 			}
 
 			if($render != null) {
-				$data = base64_decode($render);
+				
 				
 				AssetVersion::GetLatestVersionOf($this)->setThumbnail($this);
 
-				file_put_contents($_SERVER['DOCUMENT_ROOT']."/../assets/thumbs/".AssetVersion::GetLatestVersionOf($this)->md5sig, $data);
+				if(!$is3D || $type == AssetType::PLACE) {
+					$data = base64_decode($render);
+					file_put_contents($_SERVER['DOCUMENT_ROOT']."/../assets/thumbs/".AssetVersion::GetLatestVersionOf($this)->md5sig, $data);
+				} else {
+					$data = trim($render);
+					$data = str_replace("\"x\":+", "\"x\":-", $data);
+					$data = str_replace("\"y\":+", "\"y\":-", $data);
+					$data = str_replace("\"z\":+", "\"z\":-", $data);
+
+					//$data = preg_replace("/Player([0-9]+)Tex\.png/i", "scene.png", $data);
+
+					if(str_ends_with($data, "==")) {
+						$data = substr($data, 0, strlen($data)-2);
+					}
+					file_put_contents($_SERVER['DOCUMENT_ROOT']."/../assets/3d/".AssetVersion::GetLatestVersionOf($this)->md5sig .".json", $data);
+				}
+				
 			} else {
 				if(file_exists($_SERVER['DOCUMENT_ROOT']."/../assets/thumbs/".AssetVersion::GetLatestVersionOf($this)->md5thumb)) {
 

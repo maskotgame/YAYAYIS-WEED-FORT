@@ -1,20 +1,21 @@
 <?php
 	use anorrl\User;
+	use anorrl\Asset;
 
-	if(!isset($_GET['userid']))
+	if(!isset($_GET['userid']) && !isset($_GET['assetid']))
 		die(http_response_code(500));
 	
-	$user = User::FromID(intval($_GET['userid']));
+	$data = isset($_GET['userid']) ? User::FromID(intval($_GET['userid'])) : Asset::FromID(intval($_GET['assetid']));
 
-	if(!$user)
+	if(!$data)
 		die(http_response_code(500));
-
-	$hash = $user->currentoutfitmd5;
 
 	header("Content-Type: application/json");
 
+	$api = $data instanceof User ? "avatar" : "asset";
+
 	echo json_encode([
 		"Final" => true,
-		"Url" => "/thumbnail/avatar/generate?for={$user->id}"
+		"Url" => "/thumbnail/{$api}/generate?for={$data->id}"
 	])
 ?>

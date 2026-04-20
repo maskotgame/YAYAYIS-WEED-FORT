@@ -520,6 +520,8 @@ ANORRL.Character  = {
 					console.log("3D: complete!");
 				}, function() {
 					console.log("3D: I dont like you");
+					$("img#PlayerRender").css("display", "block");
+					$("div#PlayerRender").css("display", "none");
 				});
 			}
 			
@@ -689,6 +691,8 @@ $(function(){
 			console.log("3D: complete!");
 		}, function() {
 			console.log("3D: I dont like you");
+			$("img#PlayerRender").css("display", "block");
+			$("div#PlayerRender").css("display", "none");
 		});
 	}
 });

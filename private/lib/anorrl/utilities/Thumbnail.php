@@ -1,6 +1,7 @@
 <?php
 	namespace anorrl\utilities;
 
+	use anorrl\Asset;
 	use anorrl\User;
 
 	/* araki, what the fuck am i doing */
@@ -11,21 +12,24 @@
 			return preg_match('/^[a-f0-9]{32}$/', $hash);
 		}
 
-		public static function Exists($hash): bool {
+		public static function Exists($hash, bool $user): bool {
 			if(!self::IsValidHash($hash))
 				return false;
 
-			return file_exists(self::GetPath($hash));
+			return file_exists(self::GetPath($hash, $user ? "renders" : "assets"));
 		}
 
 		public static function GetPath(string $hash, string $service = "renders"): string {
 			return $_SERVER['DOCUMENT_ROOT']."/../{$service}/3d/{$hash}.json";
 		}
 
-		public static function Generate3D(User $user) {
-			$hash = $user->currentoutfitmd5;
-
-			$result_json = self::GetRenderFile($hash);
+		public static function Generate3D(User|Asset $item) {
+			if($item instanceof User)
+				$hash = $item->currentoutfitmd5;
+			else
+				$hash = $item->getMD5HashCurrent();
+			
+			$result_json = self::GetRenderFile($hash, $item instanceof User);
 
 			if(!$result_json)
 				return null;
@@ -37,12 +41,12 @@
 			];
 		}
 
-		public static function Get3DObj(string $hash) {
-			return self::GetFileInRender($hash, "scene.obj");
+		public static function Get3DObj(string $hash, bool $user = true) {
+			return self::GetFileInRender($hash, "scene.obj", $user);
 		}
 
-		public static function Get3DMtl(string $hash) {
-			$mtl = self::GetFileInRender($hash, "scene.mtl");
+		public static function Get3DMtl(string $hash, bool $user = true) {
+			$mtl = self::GetFileInRender($hash, "scene.mtl", $user);
 
 			if($mtl)
 				//return preg_replace("/Player([0-9]+)Tex\.png/i", $hash, $mtl);
@@ -51,24 +55,24 @@
 				return null;
 		}
 
-		public static function Get3DTex(string $hash, string $file) {
-			return self::GetFileInRender($hash, $file);
+		public static function Get3DTex(string $hash, string $file, bool $user = true) {
+			return self::GetFileInRender($hash, $file, $user);
 		}
 
-		private static function GetRenderFile(string $hash): mixed {
-			if(!self::Exists($hash))
+		private static function GetRenderFile(string $hash, bool $user = true): mixed {
+			if(!self::Exists($hash, $user))
 				return null;
 
-			$json = json_decode((file_get_contents(self::GetPath($hash))), true, 1024, JSON_THROW_ON_ERROR);
+			$json = json_decode((file_get_contents(self::GetPath($hash, $user ? "renders" : "assets"))), true, 1024, JSON_THROW_ON_ERROR);
 
-			if(!$json)
-				unlink(self::GetPath($hash)); // scary
+			//if(!$json)
+				//unlink(self::GetPath($hash, $user ? "renders" : "assets")); // scary
 
 			return $json;
 		}
 
-		private static function GetFileInRender(string $hash, string $file): mixed {
-			$result_json = self::GetRenderFile($hash);
+		private static function GetFileInRender(string $hash, string $file, bool $user): mixed {
+			$result_json = self::GetRenderFile($hash, $user);
 
 			if(!$result_json)
 				return null;
